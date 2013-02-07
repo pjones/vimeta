@@ -9,8 +9,12 @@ the LICENSE file.
 
 -}
 
-module Main where
-import Vimeta.CommandLine (parseAndDispatch)
+module Vimeta.TV where
+import Network.API.TheTVDB as TVDB
 
-main :: IO ()
-main = parseAndDispatch
+data Config = Config
+  { seriesID              :: TVDB.UniqueID
+  , seasonNumber          :: TVDB.UniqueID
+  , startingEpisodeNumber :: Maybe TVDB.UniqueID
+  , episodeFiles          :: [FilePath]
+  } deriving (Eq, Show)

@@ -9,8 +9,10 @@ the LICENSE file.
 
 -}
 
-module Main where
-import Vimeta.CommandLine (parseAndDispatch)
+module Vimeta.Movie where
+import qualified Network.API.TheMovieDB as TMDB
 
-main :: IO ()
-main = parseAndDispatch
+data Config = Config
+  { movieID   :: TMDB.MovieID
+  , movieFile :: FilePath
+  } deriving (Eq, Show)
