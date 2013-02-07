@@ -1,20 +1,35 @@
-name:                vimeta
-version:             0.1.0.0
--- synopsis:
--- description:         
-license:             MIT
-license-file:        LICENSE
-author:              Peter Jones
-maintainer:          Peter Jones <pjones@pmade.com>
--- copyright:           
-category:            Video
-build-type:          Simple
-cabal-version:       >=1.8
+-- http://www.haskell.org/cabal/users-guide/developing-packages.html
+name:          vimeta
+version:       0.1.0.0
+synopsis:      FIXME
+homepage:      http://github.com/pjones/vimeta
+bug-reports:   http://github.com/pjones/vimeta/issues
+license:       GPL
+license-file:  LICENSE
+author:        Peter Jones <pjones@pmade.com>
+maintainer:    Peter Jones <pjones@pmade.com>
+copyright:     Copyright (c) 2013 Peter Jones <pjones@pmade.com>
+category:      Video
+stability:     experimental
+tested-with:   GHC == 7.4.2, GHC == 7.6.1
+build-type:    Simple
+cabal-version: >=1.8
+description:   FIXME         
+
+extra-source-files:
+  CHANGES
+  README.md
+  LICENSE
+  GPL
+  TODO.org
 
 executable vimeta
   main-is: Main.hs
-  -- other-modules:       
   hs-source-dirs: src
   build-depends: base == 4.5.*
                , themoviedb == 0.1.*
                , thetvdb == 0.1.*
+
+source-repository head
+  type: git
+  location: git://github.com/pjones/vimeta.git
