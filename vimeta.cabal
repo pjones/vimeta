@@ -30,6 +30,11 @@ executable vimeta
                , themoviedb == 0.1.*
                , thetvdb == 0.1.*
                , optparse-applicative == 0.5.*
+               , safe == 0.3.*
+               , temporary == 1.1.*
+               , conduit == 0.5.*
+               , http-conduit == 1.8.*
+               , process == 1.1.*
 
 source-repository head
   type: git

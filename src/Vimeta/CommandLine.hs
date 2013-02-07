@@ -49,7 +49,7 @@ config = subparser
 
 -- Dispatch to the correct sub-command.
 dispatch :: CommandLine -> IO ()
-dispatch (MovieCmd c) = putStrLn $ "Movie: " ++ show c
+dispatch (MovieCmd c) = VM.update c
 dispatch (TVCmd c)    = putStrLn $ "TV: " ++ show c
 
 -- Actually parse the command line and delegate to the dispatcher.
