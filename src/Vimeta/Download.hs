@@ -27,3 +27,4 @@ downloadTo url handle = do request <- parseUrl url
                            withManager $ \manager -> do
                              Response _ _ _ src <- http request manager
                              src $$+- sinkHandle handle
+                           hFlush handle
