@@ -10,8 +10,11 @@ the LICENSE file.
 -}
 
 module Vimeta.AtomicParsley where
+import Data.Time (Day(..))
+import Data.Time (formatTime)
 import System.Cmd (rawSystem)
 import System.Exit (ExitCode(..))
+import System.Locale (defaultTimeLocale)
 
 type Options = [(String, String)]
 
@@ -24,3 +27,7 @@ update file opts =
   where ap       = "AtomicParsley"
         flatOpts = foldr (\(x, y) a -> x:y:a) def opts
         def      = ["--overWrite"]
+
+-- Format a date according to how AtomicParsley input requirements.
+formatDate :: Day -> String
+formatDate = formatTime defaultTimeLocale "%Y-%m-%dT00:00:00Z"
