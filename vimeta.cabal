@@ -11,7 +11,7 @@ maintainer:    Peter Jones <pjones@pmade.com>
 copyright:     Copyright (c) 2013 Peter Jones <pjones@pmade.com>
 category:      Video
 stability:     experimental
-tested-with:   GHC == 7.4.2, GHC == 7.6.1
+tested-with:   GHC == 7.4.2, GHC == 7.6.3
 build-type:    Simple
 cabal-version: >=1.8
 description:   FIXME         
@@ -26,18 +26,18 @@ extra-source-files:
 executable vimeta
   main-is: Main.hs
   hs-source-dirs: src
-  build-depends: base == 4.5.*
-               , themoviedb == 0.1.*
-               , thetvdb == 0.1.*
-               , optparse-applicative == 0.5.*
-               , safe == 0.3.*
-               , temporary == 1.1.*
-               , conduit == 0.5.*
-               , http-conduit == 1.8.*
-               , process == 1.1.*
-               , old-locale ==1.0.*
-               , time >= 1.2 && < 1.5
-               , text ==0.11.*
+  build-depends: base                 >= 4    && < 5
+               , conduit              >= 1.0  && < 1.1
+               , http-conduit         >= 1.8  && < 1.9
+               , old-locale           >= 1.0  && < 1.1
+               , optparse-applicative >= 0.5  && < 0.6
+               , process              >= 1.1  && < 1.2
+               , safe                 >= 0.3  && < 0.4
+               , temporary            >= 1.1  && < 1.2
+               , text                 >= 0.11 && < 0.12
+               , themoviedb           >= 0.1  && < 0.2
+               , thetvdb              >= 0.1  && < 0.2
+               , time                 >= 1.2  && < 1.5
 
 source-repository head
   type: git

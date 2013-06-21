@@ -1,15 +1,22 @@
 ################################################################################
-.PHONEY: all clean test
+.PHONEY: all clean test setup
 
 ################################################################################
 all:
-	cabal configure && cabal build
+	cabal-dev install
 
 ################################################################################
 clean:
-	cabal clean
+	cabal-dev clean
 
 ################################################################################
 test:
-	cabal configure --enable-tests && \
-	  cabal build && cabal test
+	cabal-dev install --enable-tests
+
+################################################################################
+setup:
+	git submodule update --init
+	- cabal-dev ghc-pkg unregister thetvdb
+	cabal-dev add-source vendor/thetvdb
+	- cabal-dev ghc-pkg unregister themoviedb
+	cabal-dev add-source vendor/themoviedb
