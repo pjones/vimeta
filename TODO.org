@@ -1,0 +1,4 @@
+* Milestone: Release 0.2.0.0
+** TODO Add interactive search
+** TODO One configuration file (and place for keys)
+** TODO Use format strings to support other media editors
