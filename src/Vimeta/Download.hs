@@ -9,22 +9,27 @@ the LICENSE file.
 
 -}
 
+--------------------------------------------------------------------------------
 module Vimeta.Download (download) where
+
+--------------------------------------------------------------------------------
 import System.IO.Temp (withSystemTempFile)
 import Data.Conduit (($$+-))
 import Data.Conduit.Binary (sinkHandle)
 import Network.HTTP.Conduit (Response(..), parseUrl, withManager, http)
 import System.IO
 
+--------------------------------------------------------------------------------
 download :: Maybe String -> (Maybe FilePath -> IO a) -> IO a
 download url f = case url of
   Nothing   -> f Nothing
   Just url' -> withSystemTempFile "vimeta.img" $
                \name handle -> downloadTo url' handle >> f (Just name)
 
+--------------------------------------------------------------------------------
 downloadTo :: String -> Handle -> IO ()
 downloadTo url handle = do request <- parseUrl url
                            withManager $ \manager -> do
-                             Response _ _ _ src <- http request manager
-                             src $$+- sinkHandle handle
+                             response <- http request manager
+                             responseBody response $$+- sinkHandle handle
                            hFlush handle

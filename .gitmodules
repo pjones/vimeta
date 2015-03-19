@@ -4,3 +4,6 @@
 [submodule "vendor/themoviedb"]
 	path = vendor/themoviedb
 	url = git://pmade.com/themoviedb.git
+[submodule "util"]
+	path = util
+	url = git://pmade.com/haskell-util.git

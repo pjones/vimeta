@@ -1,22 +1,21 @@
 ################################################################################
-.PHONEY: all clean test setup
+.PHONEY: all install restart
 
 ################################################################################
-all:
-	cabal-dev install
+# Set up the default target.
+all::
 
 ################################################################################
-clean:
-	cabal-dev clean
-
-################################################################################
-test:
-	cabal-dev install --enable-tests
-
-################################################################################
-setup:
+# Ask `git' to update the submodule and make haskell.mk available.
+util/haskell.mk:
 	git submodule update --init
-	- cabal-dev ghc-pkg unregister thetvdb
-	cabal-dev add-source vendor/thetvdb
-	- cabal-dev ghc-pkg unregister themoviedb
-	cabal-dev add-source vendor/themoviedb
+
+################################################################################
+# From util/haskell.mk (git submodule update --init)
+CABAL_FLAGS         =
+CABAL_DEP_PROFILING = -O2
+CABAL_ADD_SOURCE    = vendor/themoviedb
+CABAL_ADD_SOURCE   += vendor/thetvdb
+
+################################################################################
+include util/haskell.mk

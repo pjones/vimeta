@@ -9,18 +9,23 @@ the LICENSE file.
 
 -}
 
+--------------------------------------------------------------------------------
 module Vimeta.AtomicParsley where
+
+--------------------------------------------------------------------------------
 import Data.Time (Day(..))
 import Data.Time (formatTime)
-import System.Cmd (rawSystem)
 import System.Exit (ExitCode(..))
 import System.Locale (defaultTimeLocale)
+import System.Process (spawnProcess, waitForProcess)
 
 type Options = [(String, String)]
 
+--------------------------------------------------------------------------------
 update :: FilePath -> Options -> IO ()
 update file opts =
-  do eCode <- rawSystem ap (file:flatOpts)
+  do process <- spawnProcess ap (file:flatOpts)
+     eCode   <- waitForProcess process
      case eCode of
        ExitSuccess   -> return ()
        ExitFailure i -> putStrLn $ ap ++ " failed with: " ++ show i
@@ -28,6 +33,7 @@ update file opts =
         flatOpts = foldr (\(x, y) a -> x:y:a) def opts
         def      = ["--overWrite"]
 
+--------------------------------------------------------------------------------
 -- Format a date according to how AtomicParsley input requirements.
 formatDate :: Day -> String
 formatDate = formatTime defaultTimeLocale "%Y-%m-%dT00:00:00Z"
