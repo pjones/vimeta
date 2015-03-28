@@ -18,12 +18,13 @@ haskellPackages.cabal.mkDerivation (self: {
   ];
 
   buildDepends = with pkgs; [
-    # Haskell packages.
-    haskellPackages.mtl
-
     # Libraries needed by Haskell packages:
     zlib
   ];
+
+  shellHook = with pkgs; ''
+    export LD_LIBRARY_PATH="${zlib}/lib:$LD_LIBRARY_PATH"
+  '';
 
   meta = with self.stdenv.lib; {
     homepage = http://github.com/pjones/vimeta;
