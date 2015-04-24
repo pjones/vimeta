@@ -1,35 +1,63 @@
-# This is currently a Nix expression for building with cabal but I
-# plan on changing it so it just builds with GNU Make.  That way all
-# of my sandboxing will work correctly.
-{ pkgs ? (import <nixpkgs> {}) }:
+{ stdenv, haskellPackages }:
 
-let haskellPackages = pkgs.haskellPackages; in
+let
+  env = haskellPackages.ghcWithPackages (p: with p; [
+    # Tools:
+    cabal-install
+    hlint
 
-haskellPackages.cabal.mkDerivation (self: {
-  pname = "vimeta";
-  version = "0.0.0.0";
-  src = ./.;
-  isLibrary = true;
-  isExecutable = true;
+    # Libraries:
+    aeson
+    ansi-terminal
+    binary
+    bytestring
+    containers
+    either
+    haskeline
+    http-client
+    http-client-tls
+    http-types
+    mtl
+    network
+    network-uri
+    old-locale
+    optparse-applicative
+    process
+    temporary
+    text
+    text-binary
+    time
+    transformers
+    unix
+  ]);
 
-  buildTools = with pkgs; [
-    haskellPackages.ghc
-    haskellPackages.cabalInstall
-  ];
+in stdenv.mkDerivation rec {
+  name = "vimeta";
+  src = ./src;
 
-  buildDepends = with pkgs; [
-    # Libraries needed by Haskell packages:
-    zlib
-  ];
+  buildInputs = [ env ];
 
-  shellHook = with pkgs; ''
-    export LD_LIBRARY_PATH="${zlib}/lib:$LD_LIBRARY_PATH"
+  buildPhase = ''
+    ( HOME="$(mktemp -d)" # For cabal-install.
+      if [ ! -d .cabal-sandbox ]; then
+        cabal sandbox init
+        cabal sandbox add-source vendor/themoviedb
+        cabal sandbox add-source vendor/byline
+        cabal install --only-dependencies
+        cabal configure -fmaintainer
+      fi
+
+      cabal build || exit 1
+    ) && hlint src
   '';
 
-  meta = with self.stdenv.lib; {
-    homepage = http://github.com/pjones/vimeta;
-    description = "";
-    license = licenses.gpl3;
-    platforms = self.ghc.meta.platforms;
-  };
-})
+  installPhase = ''
+  '';
+
+  shellHook = ''
+    export NIX_GHC="${env}/bin/ghc"
+    export NIX_GHCPKG="${env}/bin/ghc-pkg"
+    export NIX_GHC_DOCDIR="${env}/share/doc/ghc/html"
+    export NIX_GHC_LIBDIR=$( $NIX_GHC --print-libdir )
+  '';
+}
