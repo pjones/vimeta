@@ -13,23 +13,29 @@ the LICENSE file.
 module Vimeta.Download (download) where
 
 --------------------------------------------------------------------------------
-import System.IO.Temp (withSystemTempFile)
-import Data.Conduit (($$+-))
-import Data.Conduit.Binary (sinkHandle)
-import Network.HTTP.Conduit (Response(..), parseUrl, withManager, http)
+import qualified Data.ByteString.Lazy as BS
+import qualified Network.HTTP.Client as HC
+import Network.HTTP.Types
 import System.IO
+import System.IO.Temp (withSystemTempFile)
 
 --------------------------------------------------------------------------------
-download :: Maybe String -> (Maybe FilePath -> IO a) -> IO a
-download url f = case url of
-  Nothing   -> f Nothing
-  Just url' -> withSystemTempFile "vimeta.img" $
-               \name handle -> downloadTo url' handle >> f (Just name)
+download :: Maybe String              -- ^ URL.
+         -> (Maybe FilePath -> IO a)  -- ^ Function to run on downloaded file.
+         -> IO a                      -- ^ Result of above function.
+download url f =
+  case url of
+    Nothing   -> f Nothing
+    Just url' -> withSystemTempFile "vimeta.img" $ \name handle -> $ do
+      downloadTo url' handle
+      f (Just name)
 
 --------------------------------------------------------------------------------
+-- FIXME: Don't create a new manager all the time.
 downloadTo :: String -> Handle -> IO ()
-downloadTo url handle = do request <- parseUrl url
-                           withManager $ \manager -> do
-                             response <- http request manager
-                             responseBody response $$+- sinkHandle handle
-                           hFlush handle
+downloadTo url handle = do
+  request <- HC.parseUrl url
+  withManager $ \manager -> do
+    response <- HC.httpLbs request manager
+    BS.hPut handle (HC.responseBody r)
+    hFlush handle

@@ -10,12 +10,11 @@ the LICENSE file.
 -}
 
 module Vimeta.Movie (Config(..), update) where
+import Data.Maybe
 import Data.Maybe (fromMaybe, listToMaybe)
-import Safe (headDef)
-import Vimeta.Download (download)
 import qualified Network.API.TheMovieDB as TMDB
-import qualified Network.API.TheMovieDB.Util as TMDBu
 import qualified Vimeta.AtomicParsley as AP
+import Vimeta.Download (download)
 
 -- The configuration information needed in order to update the
 -- metadata in a movie file.
@@ -31,7 +30,7 @@ atomicParsleyOptions mov poster =
   , ("--year",        AP.formatDate $ TMDB.movieReleaseDate mov)
   , ("--title",       TMDB.movieTitle mov)
   , ("--description", TMDB.movieOverview mov)
-  , ("--genre",       TMDB.genreName $ headDef defGenere $ TMDB.movieGenres mov)
+  , ("--genre",       TMDB.genreName $ listToMaybe defGenere $ TMDB.movieGenres mov)
   , ("--artwork",     fromMaybe "REMOVE_ALL" poster)
   ]
   where defGenere = TMDB.Genre 0 ""
