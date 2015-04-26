@@ -15,6 +15,7 @@ the LICENSE file.
 module Vimeta.Context
        ( Vimeta (..)
        , Context (..)
+       , die
        , runVimeta
        , ask
        , asks
@@ -43,6 +44,11 @@ newtype Vimeta a =
 --------------------------------------------------------------------------------
 context :: Manager -> Config -> Context
 context man cfg = Context man cfg
+
+--------------------------------------------------------------------------------
+-- | Terminate a 'Vimeta' session with an error message.
+die :: String -> Vimeta a
+die message = Vimeta $ lift (left message)
 
 --------------------------------------------------------------------------------
 runVimeta :: Vimeta a -> IO (Either String a)

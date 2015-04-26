@@ -43,6 +43,7 @@ library
     Vimeta.Tagger
     Vimeta.UI.CommandLine
     Vimeta.UI.CommandLine.Config
+    Vimeta.UI.Term.MovieSearch
 
   hs-source-dirs: src
   default-language: Haskell2010
@@ -71,6 +72,7 @@ library
                , text                 >= 0.11  && < 1.3
                , themoviedb           >= 1.0   && < 1.1
                , time                 >= 1.2   && < 1.6
+               , transformers         >= 0.3   && < 0.4
                , xdg-basedir          >= 0.2   && < 0.3
                , yaml                 >= 0.8   && < 0.9
 
