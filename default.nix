@@ -29,6 +29,8 @@ let
     time
     transformers
     unix
+    xdg-basedir
+    yaml
   ]);
 
 in stdenv.mkDerivation rec {

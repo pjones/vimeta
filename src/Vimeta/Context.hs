@@ -24,24 +24,36 @@ module Vimeta.Context
 --------------------------------------------------------------------------------
 import Control.Applicative
 import Control.Monad.Reader
+import Control.Monad.Trans.Either
 import Network.HTTP.Client (Manager, withManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
+import Vimeta.Config
 
 --------------------------------------------------------------------------------
 data Context = Context
   { ctxManager :: Manager
+  , ctxConfig  :: Config
   }
 
 --------------------------------------------------------------------------------
-newtype Vimeta a = Vimeta {unV :: ReaderT Context IO a}
-                 deriving (Functor, Applicative, Monad, MonadIO,
-                           MonadReader Context)
+newtype Vimeta a =
+  Vimeta {unV :: ReaderT Context (EitherT String IO) a}
+  deriving (Functor, Applicative, Monad, MonadIO, MonadReader Context)
 
 --------------------------------------------------------------------------------
-context :: Manager -> Context
-context man = Context man
+context :: Manager -> Config -> Context
+context man cfg = Context man cfg
 
 --------------------------------------------------------------------------------
-runVimeta :: Vimeta a -> IO a
-runVimeta m = withManager tlsManagerSettings go
-  where go manager = runReaderT (unV m) (context manager)
+runVimeta :: Vimeta a -> IO (Either String a)
+runVimeta m = do
+  configE <- readConfig
+
+  case configE of
+    Left e    -> return (Left e)
+    Right cfg -> withManager tlsManagerSettings (go cfg)
+
+  where
+    go config manager =
+      let ctx = context manager config
+      in runEitherT $ runReaderT (unV m) ctx
