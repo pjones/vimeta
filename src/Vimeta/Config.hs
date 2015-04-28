@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings,ScopedTypeVariables #-}
 
 {-
 
@@ -23,10 +23,13 @@ module Vimeta.Config
 
 --------------------------------------------------------------------------------
 import Control.Applicative
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Either
 import Data.Aeson
 import Data.Aeson.Types (typeMismatch)
 import Data.Text (Text)
 import Data.Yaml (decodeFileEither, encodeFile)
+import Network.API.TheMovieDB (Key)
 import System.Directory (doesFileExist, createDirectoryIfMissing)
 import System.Environment.XDG.BaseDir (getUserConfigFile)
 import System.FilePath (takeDirectory)
@@ -35,7 +38,7 @@ import Vimeta.Tagger
 --------------------------------------------------------------------------------
 -- | Vimeta configuration.
 data Config = Config
-  { configTMDBKey     :: Text
+  { configTMDBKey     :: Key
   , configFormatMovie :: Text
   , configFormatTV    :: Text
   }
@@ -72,38 +75,41 @@ configFileName = getUserConfigFile "vimeta" "config.yml"
 
 --------------------------------------------------------------------------------
 -- | Read the configuration file and return a 'Config' value or an error.
-readConfig :: IO (Either String Config)
+readConfig :: (MonadIO m) => EitherT String m Config
 readConfig = do
-  filename <- configFileName
-  exists   <- doesFileExist filename
+  filename <- liftIO configFileName
+  exists   <- liftIO (doesFileExist filename)
 
   if exists
     then decodeConfig filename
-    else return (Left $ missingFile filename)
+    else left $ missingFile filename
 
   where
-    decodeConfig :: FilePath -> IO (Either String Config)
-    decodeConfig fn = do result <- decodeFileEither fn
-                         return $ case result of
-                                    Left e  -> Left (show e)
-                                    Right a -> Right a
+    decodeConfig :: (MonadIO m) => FilePath -> EitherT String m Config
+    decodeConfig fn = do result <- liftIO $ decodeFileEither fn
+                         case result of
+                           Left e  -> left (show e)
+                           Right a -> return a
 
     missingFile :: FilePath -> String
     missingFile fn = "no config file found, use the `config' command " ++
                      "to create " ++ fn
 
 --------------------------------------------------------------------------------
-writeConfig :: Config -> IO (Either String FilePath)
+writeConfig :: (MonadIO m) => Config -> EitherT String m FilePath
 writeConfig c = do
-  filename <- configFileName
-  exists   <- doesFileExist filename
+  (filename, exists) <- liftIO $ do
+    fn <- configFileName
+    ex <- doesFileExist fn
 
-  -- mkdir -p `dirname filename`
-  createDirectoryIfMissing True (takeDirectory filename)
+    -- mkdir -p `dirname filename`
+    -- FIXME: move this down into the 'else' part below.
+    createDirectoryIfMissing True (takeDirectory fn)
+    return (fn, ex)
 
   if exists
-    then return (Left $ existError filename)
-    else encodeFile filename c >> return (Right filename)
+    then left (existError filename)
+    else liftIO (encodeFile filename c) >> return filename
 
   where
     existError :: FilePath -> String

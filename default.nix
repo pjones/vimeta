@@ -22,6 +22,7 @@ let
     network-uri
     old-locale
     optparse-applicative
+    parsec
     process
     temporary
     text

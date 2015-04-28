@@ -19,12 +19,13 @@ module Vimeta.UI.CommandLine.Config
        ) where
 
 --------------------------------------------------------------------------------
-import Control.Monad.Error
+import Control.Monad.Trans.Either
 import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Options.Applicative
 import System.Console.Byline
+import System.Exit
 import Vimeta.Config
 import Vimeta.Tagger
 
@@ -36,7 +37,7 @@ data Options = Options
 
 --------------------------------------------------------------------------------
 optionsParser :: Parser Options
-optionsParser = Options <$> (optional $ Text.pack <$> strOption getKey)
+optionsParser = Options <$> optional (Text.pack <$> strOption getKey)
                         <*> pure AtomicParsley
 
   where
@@ -48,21 +49,32 @@ optionsParser = Options <$> (optional $ Text.pack <$> strOption getKey)
                      ]
 
 --------------------------------------------------------------------------------
-run :: Options -> IO (Either String ())
+run :: Options -> IO ()
 run opts = do
   let def    = defaultConfig (optsTagger opts)
       config = case optsKey opts of
                  Nothing -> def
                  Just k  -> def {configTMDBKey = k}
 
-  runErrorT $ do
-    result <- ErrorT $ writeConfig config
+  result <- runEitherT (app opts config)
 
-    case optsKey opts of
-      Just _  -> return ()
-      Nothing -> liftIO (reportMissing result)
+  case result of
+    Left e         -> byline Error e >> exitFailure
+    Right (Just w) -> byline Warning w
+    Right Nothing  -> return ()
 
   where
-    reportMissing fn = runByline (reportLn Warning $ missingKey fn)
-    missingKey fn = "please edit the config file and set the API key: " <>
-                    text (Text.pack fn)
+    byline :: ReportType -> String -> IO ()
+    byline rt = runByline . reportLn rt . text . Text.pack
+
+--------------------------------------------------------------------------------
+app :: Options -> Config -> EitherT String IO (Maybe String)
+app opts config = do
+  filename <- writeConfig config
+
+  return $ case optsKey opts of
+    Just _  -> Nothing -- No warnings.
+    Nothing -> Just (missingKey filename)
+
+  where
+    missingKey = ("please edit the config file and set the API key: " ++)

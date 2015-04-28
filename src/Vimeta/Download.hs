@@ -11,37 +11,59 @@ the LICENSE file.
 
 --------------------------------------------------------------------------------
 -- | Utility functions for downloading files.
-module Vimeta.Download (download) where
+module Vimeta.Download
+       ( withArtwork
+       , withDownload
+       ) where
 
 --------------------------------------------------------------------------------
 -- | Imports.
 import qualified Data.ByteString.Lazy as BS
+import Data.Maybe
+import Data.Text (Text)
+import qualified Data.Text as Text
 import qualified Network.HTTP.Client as HC
+import System.FilePath
 import System.IO (Handle, hFlush)
 import System.IO.Temp (withSystemTempFile)
 import Vimeta.Context
 
 --------------------------------------------------------------------------------
+-- | Try to download artwork and run the given function.  The
+-- function will be passed a 'FilePath' if the artwork was downloaded.
+withArtwork :: (MonadIO m) => [Text] -> (Maybe FilePath -> IO a) -> Vimeta m a
+withArtwork []   f = liftIO $ f Nothing
+withArtwork urls f = withDownload (listToMaybe $ candidates urls) f
+  where
+    candidates :: [Text] -> [Text]
+    candidates = filter checkExtension . reverse
+
+    checkExtension :: Text -> Bool
+    checkExtension = goodExtension . takeExtension . Text.unpack . Text.toLower
+
+    goodExtension :: String -> Bool
+    goodExtension ext = ext == ".jpg" || ext == ".png"
+
+--------------------------------------------------------------------------------
 -- | Download the given URL to a temporary file and pass the file
 -- name to the given function.
-download :: Maybe String
-            -- ^ URL.
+withDownload :: (MonadIO m)
+             => Maybe Text
+             -- ^ URL.
 
-         -> (Maybe FilePath -> Vimeta a)
-         -- ^ Function to call and pass the file name to.
+             -> (Maybe FilePath -> IO a)
+             -- ^ Function to call and pass the file name to.
 
-         -> Vimeta a
-         -- ^ Result of above function.
+             -> Vimeta m a
+             -- ^ Result of above function.
 
-download Nothing    f = f Nothing
-download (Just url) f = do
+withDownload Nothing    f = liftIO $ f Nothing
+withDownload (Just url) f = do
   manager <- asks ctxManager
 
-  name <- liftIO $ withSystemTempFile "vimeta" $ \name handle -> do
-    downloadToHandle manager url handle
-    return name
-
-  f (Just name)
+  liftIO $ withSystemTempFile "vimeta" $ \name handle -> do
+    downloadToHandle manager (Text.unpack url) handle
+    f (Just name)
 
 --------------------------------------------------------------------------------
 -- | Helper function to the actual HTTP downloading into a file handle.

@@ -39,12 +39,13 @@ apSuffix = "--overWrite"
 apMovie :: Text
 apMovie = Text.intercalate " "
           [ apPrefix
+          , "%f"
           , "--stik value=9"
-          , "--year %y"
+          , "%{--year %Y%}"
           , "--title %t"
           , "--description %d"
-          , "--genre %g"
-          , "--artwork REMOVE_ALL --artwork %a"
+          , "%{--genre %G%}"
+          , "--artwork REMOVE_ALL %{--artwork %a%}"
           , apSuffix
           ]
 
@@ -53,14 +54,15 @@ apMovie = Text.intercalate " "
 apTV :: Text
 apTV = Text.intercalate " "
        [ apPrefix
+       , "%f"
        , "--stik 'TV Show'"
-       , "--year %y"
+       , "%{--year %Y%}"
        , "--title %t"
        , "--description %d"
        , "--TVShowName %n"
        , "--TVSeasonNum %s"
        , "--TVEpisodeNum %e"
        , "--tracknum %e"
-       , "--artwork REMOVE_ALL --artwork %a"
+       , "--artwork REMOVE_ALL %{--artwork %a%}"
        , apSuffix
        ]

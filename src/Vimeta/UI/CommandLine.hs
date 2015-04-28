@@ -14,32 +14,38 @@ module Vimeta.UI.CommandLine (run) where
 
 --------------------------------------------------------------------------------
 import Data.Monoid
-import qualified Data.Text as Text
 import Options.Applicative
-import System.Console.Byline
 import System.Exit
+
+--------------------------------------------------------------------------------
 import qualified Vimeta.UI.CommandLine.Config as Config
+import qualified Vimeta.UI.CommandLine.Movie as Movie
 
 --------------------------------------------------------------------------------
 data Command = CmdConfig Config.Options
+             | CmdMovie  Movie.Options
 
 --------------------------------------------------------------------------------
 optionsParser :: Parser Command
-optionsParser = subparser $ mconcat [config]
+optionsParser = subparser $ mconcat [config, movie]
   where
     config = command "config"
              (info (CmdConfig <$> Config.optionsParser) (progDesc configDesc))
 
     configDesc = "Create a new configuration file"
 
+    movie = command "movie"
+            (info (CmdMovie <$> Movie.optionsParser) (progDesc movieDesc))
+
+    movieDesc = "Tag a movie file using data from TheMovieDB.org"
+
 --------------------------------------------------------------------------------
 run :: IO ()
 run = do
   options <- execParser $ info (optionsParser <**> helper) idm
-  result  <- case options of
-               CmdConfig o -> Config.run o
 
-  case result of
-    Right _ -> exitSuccess
-    Left e  -> do runByline (reportLn Error $ text $ Text.pack e)
-                  exitFailure
+  case options of
+    CmdConfig o -> Config.run o
+    CmdMovie  o -> Movie.run  o
+
+  exitSuccess
