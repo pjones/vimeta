@@ -32,18 +32,21 @@ import Vimeta.Context
 import Vimeta.Download
 import Vimeta.Format
 import Vimeta.Process
+import Vimeta.UI.CommandLine.Common
 import qualified Vimeta.UI.Term.MovieSearch as MovieSearch
 
 --------------------------------------------------------------------------------
 data Options = Options
   { optsMovieID :: Maybe ItemID
   , optsFile    :: FilePath
+  , optsCommon  :: CommonOptions
   }
 
 --------------------------------------------------------------------------------
 optionsParser :: Parser Options
 optionsParser = Options <$> optional (option auto getMovieID)
                         <*> argument str (metavar "FILE")
+                        <*> commonOptions
 
   where
     -- Parser options for @optsMovieID@.
@@ -55,7 +58,7 @@ optionsParser = Options <$> optional (option auto getMovieID)
 
 --------------------------------------------------------------------------------
 run :: Options -> IO ()
-run opts = runVimetaBylineApp $
+run opts = execVimetaBylineApp (updateConfig $ optsCommon opts) $
   case optsMovieID opts of
     Just mid -> do
       movie <- tmdb (fetchMovie mid)
@@ -79,14 +82,10 @@ tagMovie filename movie = do
   let format  = configFormatMovie (ctxConfig context)
       tmdbCfg = ctxTMDBCfg context
 
-  result <- withArtwork (moviePosterURLs tmdbCfg movie) $ \artwork ->
+  withArtwork (moviePosterURLs tmdbCfg movie) $ \artwork ->
     case fromFormatString (formatMap artwork) "config.cmd_movie" format of
-      Left e    -> return (Left e)
-      Right cmd -> tagFile cmd
-
-  case result of
-    Left e -> die e
-    _      -> return ()
+      Left e    -> die e
+      Right cmd -> tagFile (Text.unpack cmd)
 
   where
     formatMap :: Maybe FilePath -> FormatTable

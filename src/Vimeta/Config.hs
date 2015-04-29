@@ -41,14 +41,18 @@ data Config = Config
   { configTMDBKey     :: Key
   , configFormatMovie :: Text
   , configFormatTV    :: Text
+  , configVerbose     :: Bool
+  , configDryRun      :: Bool
   }
 
 --------------------------------------------------------------------------------
 instance FromJSON Config where
   parseJSON (Object v) =
-    Config <$> v .: "tmdb_key"
-           <*> v .: "cmd_movie"
-           <*> v .: "cmd_tv"
+    Config <$> v .:  "tmdb_key"
+           <*> v .:  "cmd_movie"
+           <*> v .:  "cmd_tv"
+           <*> v .:? "verbose" .!= False
+           <*> v .:? "dryrun"  .!= False
   parseJSON x = typeMismatch "configuration" x
 
 --------------------------------------------------------------------------------
@@ -64,6 +68,8 @@ defaultConfig tagger =
   Config { configTMDBKey     = "your API key goes here"
          , configFormatMovie = fmtMovie
          , configFormatTV    = fmtTV
+         , configVerbose     = False
+         , configDryRun      = False
          }
 
   where (fmtMovie, fmtTV) = formatStringsForTagger tagger
