@@ -19,25 +19,38 @@ import System.Exit
 
 --------------------------------------------------------------------------------
 import qualified Vimeta.UI.CommandLine.Config as Config
-import qualified Vimeta.UI.CommandLine.Movie as Movie
+import qualified Vimeta.UI.CommandLine.Movie  as Movie
+import qualified Vimeta.UI.CommandLine.TV     as TV
 
 --------------------------------------------------------------------------------
 data Command = CmdConfig Config.Options
              | CmdMovie  Movie.Options
+             | CmdTV     TV.Options
 
 --------------------------------------------------------------------------------
 optionsParser :: Parser Command
-optionsParser = subparser $ mconcat [config, movie]
+optionsParser = subparser $ mconcat [config, movie, tv]
   where
-    config = command "config"
-             (info (CmdConfig <$> Config.optionsParser) (progDesc configDesc))
+    config =
+      command "config"
+      (info (CmdConfig <$> Config.optionsParser) (progDesc configDesc))
 
-    configDesc = "Create a new configuration file"
+    movie =
+      command "movie"
+      (info (CmdMovie <$> Movie.optionsParser) (progDesc movieDesc))
 
-    movie = command "movie"
-            (info (CmdMovie <$> Movie.optionsParser) (progDesc movieDesc))
+    tv =
+      command "tv"
+      (info (CmdTV <$> TV.optionsParser) (progDesc tvDesc))
 
-    movieDesc = "Tag a movie file using data from TheMovieDB.org"
+    configDesc =
+      "Create a new configuration file"
+
+    movieDesc =
+      "Tag a movie file using data from TheMovieDB.org"
+
+    tvDesc =
+      "Tag episode files using data from TheMovieDB.org"
 
 --------------------------------------------------------------------------------
 run :: IO ()
@@ -47,5 +60,6 @@ run = do
   case options of
     CmdConfig o -> Config.run o
     CmdMovie  o -> Movie.run  o
+    CmdTV     o -> TV.run     o
 
   exitSuccess

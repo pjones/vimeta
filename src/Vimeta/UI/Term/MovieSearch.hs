@@ -22,18 +22,17 @@ import Control.Applicative
 import Data.Maybe
 import Data.Monoid
 import Data.Text (Text)
-import qualified Data.Text as Text
-import Data.Time (formatTime)
 import Network.API.TheMovieDB
 import System.Console.Byline
-import System.Locale (defaultTimeLocale)
 import Vimeta.Context hiding (ask)
+import Vimeta.UI.Term.Common
+import Vimeta.UI.Util
 
 --------------------------------------------------------------------------------
 -- | Search for a movie and interact with the user through the terminal.
 search :: Text -> Vimeta (Byline IO) Movie
 search initial = do
-  name   <- byline $ fromMaybe initial <$> ask "search: " (Just initial)
+  name   <- byline $ fromMaybe initial <$> ask "search (movie name): " (Just initial)
   movies <- tmdb (searchMovies name)
   answer <- byline $ askWithMenuRepeatedly (mkMenu movies) prompt eprompt
 
@@ -43,7 +42,7 @@ search initial = do
 
   where
     -- The Menu.
-    mkMenu movies = banner "Choose a movie: " (menu movies displayMovie)
+    mkMenu movies = banner "Choose a movie:" (menu movies displayMovie)
 
     -- Menu prompt.
     prompt = "movie> "
@@ -53,11 +52,5 @@ search initial = do
 
     -- Menu item display for a movie.
     displayMovie m = mconcat [ text (movieTitle m)
-                             , " ("
-                             , text (year $ movieReleaseDate m)
-                             , ")"
+                             , text (parens $ dayAsYear $ movieReleaseDate m)
                              ]
-
-    -- The movie's release date as a year.
-    year Nothing  = "----"
-    year (Just d) = Text.pack (formatTime defaultTimeLocale "%Y" d)

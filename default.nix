@@ -47,9 +47,9 @@ in stdenv.mkDerivation rec {
         cabal sandbox add-source vendor/themoviedb
         cabal sandbox add-source vendor/byline
         cabal install --only-dependencies
-        cabal configure -fmaintainer
       fi
 
+      cabal configure -fmaintainer
       cabal build || exit 1
     ) && hlint src
   '';

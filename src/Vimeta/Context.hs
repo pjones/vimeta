@@ -19,12 +19,10 @@ module Vimeta.Context
        , die
        , runIO
        , runIOE
-       , byline
        , tmdb
        , verbose
        , execVimetaWithContext
        , execVimeta
-       , execVimetaBylineApp
        , runVimeta
        , ask
        , asks
@@ -37,14 +35,11 @@ import Control.Exception
 import Control.Monad.Reader
 import Control.Monad.Trans.Either
 import Data.Text (Text)
-import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Network.API.TheMovieDB (TheMovieDB, Key, runTheMovieDBWithManager)
 import qualified Network.API.TheMovieDB as TheMovieDB
 import Network.HTTP.Client (Manager, newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
-import System.Console.Byline hiding (ask)
-import System.Exit (exitSuccess, exitFailure)
 import System.IO (Handle, stdout)
 import Vimeta.Config
 
@@ -76,11 +71,6 @@ runIO io = liftIO (try io) >>= sinkIO
 --------------------------------------------------------------------------------
 runIOE :: (MonadIO m) => IO (Either String a) -> Vimeta m a
 runIOE io = runIO io >>= either (die . show) return
-
---------------------------------------------------------------------------------
--- | Run a 'Byline' operation.
-byline :: Byline IO a -> Vimeta (Byline IO) a
-byline = Vimeta . lift . lift
 
 --------------------------------------------------------------------------------
 -- | Run a 'TheMovieDB' operation.
@@ -140,16 +130,6 @@ execVimeta cf vimeta = runEitherT $ do
   manager <- liftIO $ newManager tlsManagerSettings
   tc <- loadTMDBConfig manager (configTMDBKey config)
   EitherT $ execVimetaWithContext (Context manager config tc stdout) vimeta
-
---------------------------------------------------------------------------------
--- | Helper function to run a 'Vimeta' value based in 'Byline'.
-execVimetaBylineApp :: (Config -> Config) -> Vimeta (Byline IO) () -> IO ()
-execVimetaBylineApp cf vimeta = runByline $ do
-    v <- execVimeta cf vimeta
-
-    case v of
-      Right _ -> liftIO exitSuccess
-      Left  e -> reportLn Error (text $ Text.pack e) >> liftIO exitFailure
 
 --------------------------------------------------------------------------------
 -- | Simple wrapper around 'execVimeta'.

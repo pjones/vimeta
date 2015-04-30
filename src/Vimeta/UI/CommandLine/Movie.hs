@@ -33,6 +33,7 @@ import Vimeta.Download
 import Vimeta.Format
 import Vimeta.Process
 import Vimeta.UI.CommandLine.Common
+import Vimeta.UI.Term.Common
 import qualified Vimeta.UI.Term.MovieSearch as MovieSearch
 
 --------------------------------------------------------------------------------
