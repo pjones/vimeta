@@ -1,4 +1,16 @@
 * Milestone: Release 0.2.0.0
-** TODO Add interactive search
-** TODO One configuration file (and place for keys)
-** TODO Use format strings to support other media editors
+** TODO Don't draw menus for empty lists
+** TODO Search for FIXME and undefined and remove
+** TODO Reorg files and reduce imports
+** TODO Add support for --version
+** TODO "a search term is required" shouldn't be used twice
+** TODO Cache TMDB.Configuration
+** TODO Trim description to 255 characters
+** TODO Missing space in movie menu before paren
+** TODO Print the movie/tv ID after it's found so that someone can reuse it if necessary
+** DONE Add interactive search
+   CLOSED: [2015-05-09 Sat 13:41]
+** DONE One configuration file (and place for keys)
+   CLOSED: [2015-05-09 Sat 13:41]
+** DONE Use format strings to support other media editors
+   CLOSED: [2015-05-09 Sat 13:41]
