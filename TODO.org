@@ -1,4 +1,5 @@
 * Milestone: Release 0.2.0.0
+** TODO Write a man page in README.md
 ** TODO Search for FIXME and undefined and remove
 ** TODO Reorg files and reduce imports
 ** TODO Add support for --version
