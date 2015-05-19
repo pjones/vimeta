@@ -9,10 +9,13 @@ let
     # Libraries:
     aeson
     ansi-terminal
+    base
     binary
     bytestring
+    colour
     containers
     either
+    exceptions
     haskeline
     http-client
     http-client-tls
@@ -25,6 +28,7 @@ let
     parsec
     process
     temporary
+    terminfo-hs
     text
     text-binary
     time

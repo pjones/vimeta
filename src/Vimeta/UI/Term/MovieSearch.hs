@@ -18,8 +18,6 @@ module Vimeta.UI.Term.MovieSearch
        ) where
 
 --------------------------------------------------------------------------------
-import Control.Applicative
-import Data.Maybe
 import Data.Monoid
 import Data.Text (Text)
 import Network.API.TheMovieDB
@@ -32,7 +30,7 @@ import Vimeta.UI.Util
 -- | Search for a movie and interact with the user through the terminal.
 search :: Text -> Vimeta (Byline IO) Movie
 search initial = do
-  name   <- byline $ fromMaybe initial <$> ask "search (movie name): " (Just initial)
+  name   <- byline $ askUntil searchPrompt (Just initial) (notEmpty searchErr)
   movies <- tmdb (searchMovies name)
   answer <- byline $ askWithMenuRepeatedly (mkMenu movies) prompt eprompt
 
@@ -43,6 +41,12 @@ search initial = do
   where
     -- The Menu.
     mkMenu movies = banner "Choose a movie:" (menu movies displayMovie)
+
+    -- Search prompt.
+    searchPrompt = "search (movie name): "
+
+    -- Search error text.
+    searchErr = "please enter a valid search term" <> fg red
 
     -- Menu prompt.
     prompt = "movie> "

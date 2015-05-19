@@ -33,7 +33,7 @@ search = do
       mprompt = "tv> "
       eprompt = text message <> fg red
 
-  name <- bylineMaybe message $ ask prompt Nothing
+  name <- byline (askUntil prompt Nothing $ notEmpty eprompt)
   series <- tmdb (searchTV name)
   answer <- byline $ askWithMenuRepeatedly (mkMenu series) mprompt eprompt
 

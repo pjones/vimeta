@@ -19,6 +19,7 @@ module Vimeta.UI.CommandLine.Config
        ) where
 
 --------------------------------------------------------------------------------
+import Control.Monad
 import Control.Monad.Trans.Either
 import Data.Monoid
 import Data.Text (Text)
@@ -65,7 +66,7 @@ run opts = do
 
   where
     byline :: ReportType -> String -> IO ()
-    byline rt = runByline . reportLn rt . text . Text.pack
+    byline rt = void . runByline . reportLn rt . text . Text.pack
 
 --------------------------------------------------------------------------------
 app :: Options -> Config -> EitherT String IO (Maybe String)

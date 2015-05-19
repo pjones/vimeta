@@ -28,7 +28,7 @@ import System.Locale (defaultTimeLocale)
 --------------------------------------------------------------------------------
 -- | Wrap some text with parenthesis.
 parens :: Text -> Text
-parens t = "(" <> t <> ")"
+parens t = " (" <> t <> ")"
 
 --------------------------------------------------------------------------------
 -- | Format a 'Maybe Day' as a year ('Text').
