@@ -19,6 +19,7 @@ module Vimeta.UI.Term.TVSearch
 
 --------------------------------------------------------------------------------
 import Data.Monoid
+import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import System.Console.Byline
 import Vimeta.Context hiding (ask)
@@ -38,14 +39,19 @@ search = do
   answer <- byline $ askWithMenuRepeatedly (mkMenu series) mprompt eprompt
 
   case answer of
-    Match tv -> tmdb $ fetchFullTVSeries (tvID tv)
+    Match tv -> logID tv >> tmdb (fetchFullTVSeries (tvID tv))
     _        -> die "you need to pick a valid TV series"
 
 
   where
+    -- The menu.
     mkMenu series = banner "Choose a TV series:" (menu series displayTV)
 
+    -- Function to display possible matches.
     displayTV series =
       mconcat [ text (tvName series)
               , text (parens $ dayRange (tvFirstAirDate series) (tvLastAirDate series))
               ]
+
+    -- Log the TV ID.
+    logID tv = verbose $ "using TV ID: " <> Text.pack (show $ tvID tv)

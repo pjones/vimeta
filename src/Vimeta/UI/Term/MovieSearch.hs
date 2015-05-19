@@ -20,6 +20,7 @@ module Vimeta.UI.Term.MovieSearch
 --------------------------------------------------------------------------------
 import Data.Monoid
 import Data.Text (Text)
+import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import System.Console.Byline
 import Vimeta.Context hiding (ask)
@@ -35,7 +36,7 @@ search initial = do
   answer <- byline $ askWithMenuRepeatedly (mkMenu movies) prompt eprompt
 
   case answer of
-    Match movie -> tmdb $ fetchMovie (movieID movie)
+    Match movie -> logID movie >> tmdb (fetchMovie (movieID movie))
     _           -> die "you need to pick a valid movie"
 
   where
@@ -58,3 +59,7 @@ search initial = do
     displayMovie m = mconcat [ text (movieTitle m)
                              , text (parens $ dayAsYear $ movieReleaseDate m)
                              ]
+
+    -- Log a movie ID.
+    logID movie = verbose $ "using movie ID: " <>
+                  Text.pack (show $ movieID movie)
