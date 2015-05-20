@@ -1,11 +1,12 @@
 * Milestone: Release 0.2.0.0
-** TODO Write a man page in README.md
 ** TODO Search for FIXME and undefined and remove
 ** TODO Reorg files and reduce imports
 ** TODO Add support for --version
 ** TODO "a search term is required" shouldn't be used twice
 ** TODO Cache TMDB.Configuration
 ** TODO Trim description to 255 characters
+** DONE Write a man page in README.md
+   CLOSED: [2015-05-20 Wed 09:04]
 ** DONE Don't draw menus for empty lists
    CLOSED: [2015-05-19 Tue 15:10]
 ** DONE Missing space in movie menu before paren
