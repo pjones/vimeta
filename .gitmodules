@@ -1,6 +1,3 @@
-[submodule "vendor/thetvdb"]
-	path = vendor/thetvdb
-	url = git://pmade.com/thetvdb.git
 [submodule "vendor/themoviedb"]
 	path = vendor/themoviedb
 	url = git://pmade.com/themoviedb.git
