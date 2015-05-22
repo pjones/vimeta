@@ -12,7 +12,7 @@ the LICENSE file.
 -}
 
 --------------------------------------------------------------------------------
-module Vimeta.Tagger
+module Vimeta.Core.Tagger
        ( Tagger (..)
        , formatStringsForTagger
        ) where

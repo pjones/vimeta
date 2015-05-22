@@ -1,5 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE OverloadedStrings, TupleSections #-}
 
 {-
 
@@ -13,7 +12,7 @@ the LICENSE file.
 -}
 
 --------------------------------------------------------------------------------
-module Vimeta.Format
+module Vimeta.Core.Format
        ( FormatTable
        , fromFormatString
        , formatYear
@@ -21,6 +20,7 @@ module Vimeta.Format
        ) where
 
 --------------------------------------------------------------------------------
+-- Library imports:
 import Control.Applicative hiding ((<|>)) -- Use the one from Parsec.
 import Control.Monad
 import Control.Monad.Reader
@@ -31,9 +31,15 @@ import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Time (Day(..), formatTime)
-import System.Locale (defaultTimeLocale)
+import Data.Time.Locale.Compat (defaultTimeLocale)
 import System.Process.Internals (translate)
 import Text.Parsec
+
+--------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
 
 --------------------------------------------------------------------------------
 -- | Mapping of format characters to their possible replacement text.

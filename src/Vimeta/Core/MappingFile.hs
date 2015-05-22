@@ -13,12 +13,13 @@ the LICENSE file.
 
 --------------------------------------------------------------------------------
 -- | Mapping files can be used to map file names to other information.
-module Vimeta.MappingFile
+module Vimeta.Core.MappingFile
        ( Parser
        , parseMappingFile
        ) where
 
 --------------------------------------------------------------------------------
+-- Library imports:
 import Control.Applicative hiding ((<|>))
 import Control.Monad.Identity
 import Data.Char (isSpace)
@@ -29,7 +30,16 @@ import qualified Data.Text.IO as Text
 import System.Directory (doesFileExist)
 import System.FilePath (takeExtension)
 import Text.Parsec
-import Vimeta.Context
+
+--------------------------------------------------------------------------------
+-- Local imports:
+import Vimeta.Core.Vimeta
+
+--------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
 
 --------------------------------------------------------------------------------
 -- | Parser type.

@@ -12,7 +12,7 @@ the LICENSE file.
 -}
 
 --------------------------------------------------------------------------------
-module Vimeta.UI.Util
+module Vimeta.UI.Common.Util
        ( parens
        , dayAsYear
        , dayRange
@@ -23,7 +23,7 @@ import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Time (Day, formatTime)
-import System.Locale (defaultTimeLocale)
+import Data.Time.Locale.Compat (defaultTimeLocale)
 
 --------------------------------------------------------------------------------
 -- | Wrap some text with parenthesis.

@@ -1,10 +1,14 @@
 * Milestone: Release 0.2.0.0
-** TODO Search for FIXME and undefined and remove
-** TODO Reorg files and reduce imports
 ** TODO Add support for --version
-** TODO "a search term is required" shouldn't be used twice
 ** TODO Cache TMDB.Configuration
-** TODO Trim description to 255 characters
+** DONE Search for FIXME and undefined and remove
+   CLOSED: [2015-05-20 Wed 16:30]
+** DONE "a search term is required" shouldn't be used twice
+   CLOSED: [2015-05-20 Wed 16:23]
+** DONE Trim description to 255 characters
+   CLOSED: [2015-05-20 Wed 16:19]
+** DONE Reorg files and reduce imports
+   CLOSED: [2015-05-20 Wed 16:17]
 ** DONE Write a man page in README.md
    CLOSED: [2015-05-20 Wed 09:04]
 ** DONE Don't draw menus for empty lists

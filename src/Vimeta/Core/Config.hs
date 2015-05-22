@@ -13,7 +13,7 @@ the LICENSE file.
 
 --------------------------------------------------------------------------------
 -- | The configuration file.
-module Vimeta.Config
+module Vimeta.Core.Config
        ( Config (..)
        , defaultConfig
        , configFileName
@@ -22,7 +22,9 @@ module Vimeta.Config
        ) where
 
 --------------------------------------------------------------------------------
+-- Library imports:
 import Control.Applicative
+import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Either
 import Data.Aeson
@@ -33,7 +35,16 @@ import Network.API.TheMovieDB (Key)
 import System.Directory (doesFileExist, createDirectoryIfMissing)
 import System.Environment.XDG.BaseDir (getUserConfigFile)
 import System.FilePath (takeDirectory)
-import Vimeta.Tagger
+
+--------------------------------------------------------------------------------
+-- Local imports:
+import Vimeta.Core.Tagger
+
+--------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
 
 --------------------------------------------------------------------------------
 -- | Vimeta configuration.
@@ -107,15 +118,13 @@ writeConfig c = do
   (filename, exists) <- liftIO $ do
     fn <- configFileName
     ex <- doesFileExist fn
-
-    -- mkdir -p `dirname filename`
-    -- FIXME: move this down into the 'else' part below.
-    createDirectoryIfMissing True (takeDirectory fn)
     return (fn, ex)
 
-  if exists
-    then left (existError filename)
-    else liftIO (encodeFile filename c) >> return filename
+  when exists $ left (existError filename)
+
+  liftIO (createDirectoryIfMissing True (takeDirectory filename))
+  liftIO (encodeFile filename c)
+  return filename
 
   where
     existError :: FilePath -> String

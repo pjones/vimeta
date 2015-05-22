@@ -22,11 +22,11 @@ module Vimeta.UI.CommandLine.TV
 import Control.Monad
 import Network.API.TheMovieDB
 import Options.Applicative
-import Vimeta.Context
+import Vimeta.Core
 import Vimeta.UI.CommandLine.Common
 import Vimeta.UI.Common.TV
 import Vimeta.UI.Term.Common
-import qualified Vimeta.UI.Term.TVSearch as TVSearch
+import Vimeta.UI.Term.TV
 
 --------------------------------------------------------------------------------
 data Options = Options
@@ -67,7 +67,7 @@ optionsParser = Options <$> optional (option auto infoTVID)
 run :: Options -> IO ()
 run opts = execVimetaBylineApp (updateConfig $ optsCommon opts) $ do
   tv <- case optsTVID opts of
-          Nothing -> TVSearch.search
+          Nothing -> tvSearch
           Just n  -> tmdb (fetchFullTVSeries n)
 
   case optsMappingFile opts of

@@ -32,6 +32,7 @@ let
     text
     text-binary
     time
+    time-locale-compat
     transformers
     unix
     xdg-basedir

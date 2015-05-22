@@ -1,4 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving,ScopedTypeVariables #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, ScopedTypeVariables #-}
 
 {-
 
@@ -12,7 +12,7 @@ the LICENSE file.
 -}
 
 --------------------------------------------------------------------------------
-module Vimeta.Context
+module Vimeta.Core.Vimeta
        ( Vimeta (..)
        , Context (..)
        , MonadIO
@@ -30,6 +30,7 @@ module Vimeta.Context
        ) where
 
 --------------------------------------------------------------------------------
+-- Library imports:
 import Control.Applicative
 import Control.Exception
 import Control.Monad.Reader
@@ -41,7 +42,16 @@ import qualified Network.API.TheMovieDB as TheMovieDB
 import Network.HTTP.Client (Manager, newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import System.IO (Handle, stdout)
-import Vimeta.Config
+
+--------------------------------------------------------------------------------
+-- Local imports:
+import Vimeta.Core.Config
+
+--------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
 
 --------------------------------------------------------------------------------
 data Context = Context

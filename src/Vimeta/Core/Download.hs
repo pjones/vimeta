@@ -13,13 +13,13 @@ the LICENSE file.
 
 --------------------------------------------------------------------------------
 -- | Utility functions for downloading files.
-module Vimeta.Download
+module Vimeta.Core.Download
        ( withArtwork
        , withDownload
        ) where
 
 --------------------------------------------------------------------------------
--- | Imports.
+-- Library imports:
 import qualified Data.ByteString.Lazy as BS
 import Data.Maybe
 import Data.Monoid
@@ -29,8 +29,11 @@ import qualified Network.HTTP.Client as HC
 import System.FilePath
 import System.IO (Handle, hFlush)
 import System.IO.Temp (withSystemTempFile)
-import Vimeta.Config
-import Vimeta.Context
+
+--------------------------------------------------------------------------------
+-- Local imports:
+import Vimeta.Core.Config
+import Vimeta.Core.Vimeta
 
 --------------------------------------------------------------------------------
 -- | Try to download artwork and run the given function.  The

@@ -12,17 +12,28 @@ the LICENSE file.
 -}
 
 --------------------------------------------------------------------------------
-module Vimeta.Process
+-- | Utility functions for running external commands.
+module Vimeta.Core.Process
        ( tagFile
        ) where
 
 --------------------------------------------------------------------------------
+-- Library imports:
 import Control.Applicative
 import qualified Data.Text as Text
-import System.Exit
+import System.Exit hiding (die)
 import System.Process
-import Vimeta.Config
-import Vimeta.Context
+
+--------------------------------------------------------------------------------
+-- Local imports:
+import Vimeta.Core.Config
+import Vimeta.Core.Vimeta
+
+--------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
 
 --------------------------------------------------------------------------------
 -- | Run the tagging command unless dry-run mode is in effect.

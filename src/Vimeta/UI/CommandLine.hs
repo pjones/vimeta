@@ -23,6 +23,12 @@ import qualified Vimeta.UI.CommandLine.Movie  as Movie
 import qualified Vimeta.UI.CommandLine.TV     as TV
 
 --------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
+
+--------------------------------------------------------------------------------
 data Command = CmdConfig Config.Options
              | CmdMovie  Movie.Options
              | CmdTV     TV.Options

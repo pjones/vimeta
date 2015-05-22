@@ -21,7 +21,7 @@ module Vimeta.UI.CommandLine.Common
 
 --------------------------------------------------------------------------------
 import Options.Applicative
-import Vimeta.Config
+import Vimeta.Core
 
 --------------------------------------------------------------------------------
 -- | Common command line options among all of the apps.

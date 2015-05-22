@@ -27,8 +27,13 @@ import qualified Data.Text as Text
 import Options.Applicative
 import System.Console.Byline
 import System.Exit
-import Vimeta.Config
-import Vimeta.Tagger
+import Vimeta.Core
+
+--------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
 
 --------------------------------------------------------------------------------
 data Options = Options

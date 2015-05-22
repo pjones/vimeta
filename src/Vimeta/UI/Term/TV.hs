@@ -13,8 +13,8 @@ the LICENSE file.
 
 --------------------------------------------------------------------------------
 -- | Search for a TV series by interacting with the user through the terminal.
-module Vimeta.UI.Term.TVSearch
-       ( search
+module Vimeta.UI.Term.TV
+       ( tvSearch
        ) where
 
 --------------------------------------------------------------------------------
@@ -22,19 +22,19 @@ import Data.Monoid
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import System.Console.Byline
-import Vimeta.Context hiding (ask)
+import Vimeta.Core hiding (ask)
+import Vimeta.UI.Common.Util
 import Vimeta.UI.Term.Common
-import Vimeta.UI.Util
 
 --------------------------------------------------------------------------------
-search :: Vimeta (Byline IO) TV
-search = do
+tvSearch :: Vimeta (Byline IO) TV
+tvSearch = do
   let prompt  = "search (series name): "
-      message = "a search term is required"
-      mprompt = "tv> "
-      eprompt = text message <> fg red
+      mprompt = "Which is the correct TV series? "
+      sprompt = "a search term is required" <> fg red
+      eprompt = "please choose a TV series" <> fg red
 
-  name <- byline (askUntil prompt Nothing $ notEmpty eprompt)
+  name <- byline (askUntil prompt Nothing $ notEmpty sprompt)
   series <- tmdb (searchTV name)
   answer <- byline $ askWithMenuRepeatedly (mkMenu series) mprompt eprompt
 

@@ -32,12 +32,17 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import Text.Parsec
-import Vimeta.Config
-import Vimeta.Context
-import Vimeta.Download
-import Vimeta.Format
-import Vimeta.MappingFile
-import Vimeta.Process
+
+--------------------------------------------------------------------------------
+-- Local imports:
+import Vimeta.Core
+import qualified Vimeta.Core.MappingFile as MF
+
+--------------------------------------------------------------------------------
+-- The following is a kludge to avoid the "redundant import" warning
+-- when using GHC >= 7.10.x.  This should be removed after we decide
+-- to stop supporting GHC < 7.10.x.
+import Prelude
 
 --------------------------------------------------------------------------------
 -- | A simple way to specify a single episode.
@@ -66,7 +71,7 @@ tagFileWithEpisode file (EpisodeCtx tv season episode) = do
     formatMap artwork = Map.fromList
       [ ('Y', formatFullDate $ episodeAirDate episode)
       , ('a', Text.pack <$> artwork)
-      , ('d', Just $ episodeOverview episode)
+      , ('d', Just (Text.take 255 $ episodeOverview episode))
       , ('e', Just . Text.pack . show $ episodeNumber episode)
       , ('f', Just $ Text.pack file)
       , ('n', Just $ tvName tv)
@@ -167,7 +172,7 @@ makeTVMap = foldr insert Map.empty . flattenTV
     insert e = Map.insert (episodeSpecFromCtx e) e
 
 --------------------------------------------------------------------------------
-episodeSpecParser :: Parser EpisodeSpec
+episodeSpecParser :: MF.Parser EpisodeSpec
 episodeSpecParser =
   do void (oneOf "Ss")
      season <- many1 digit

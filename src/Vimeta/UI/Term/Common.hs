@@ -25,8 +25,8 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import System.Console.Byline hiding (ask)
 import System.Exit (exitSuccess, exitFailure)
-import Vimeta.Config
-import Vimeta.Context
+import Vimeta.Core
+import Vimeta.Core.Vimeta (Vimeta(..))
 
 --------------------------------------------------------------------------------
 -- | Run a 'Byline' operation.

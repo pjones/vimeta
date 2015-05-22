@@ -13,8 +13,8 @@ the LICENSE file.
 
 --------------------------------------------------------------------------------
 -- | Search for a movie and interact with the user through the terminal.
-module Vimeta.UI.Term.MovieSearch
-       ( search
+module Vimeta.UI.Term.Movie
+       ( movieSearch
        ) where
 
 --------------------------------------------------------------------------------
@@ -23,14 +23,14 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import System.Console.Byline
-import Vimeta.Context hiding (ask)
+import Vimeta.Core hiding (ask)
+import Vimeta.UI.Common.Util
 import Vimeta.UI.Term.Common
-import Vimeta.UI.Util
 
 --------------------------------------------------------------------------------
 -- | Search for a movie and interact with the user through the terminal.
-search :: Text -> Vimeta (Byline IO) Movie
-search initial = do
+movieSearch :: Text -> Vimeta (Byline IO) Movie
+movieSearch initial = do
   name   <- byline $ askUntil searchPrompt (Just initial) (notEmpty searchErr)
   movies <- tmdb (searchMovies name)
   answer <- byline $ askWithMenuRepeatedly (mkMenu movies) prompt eprompt
@@ -50,7 +50,7 @@ search initial = do
     searchErr = "please enter a valid search term" <> fg red
 
     -- Menu prompt.
-    prompt = "movie> "
+    prompt = "Which is the correct movie? "
 
     -- Prompt when someone fails to pick a movie.
     eprompt = "please choose a valid movie" <> fg red
