@@ -2,3 +2,4 @@
 /.cabal-sandbox/
 /.deps.mk
 /cabal.sandbox.config
+/default.nix

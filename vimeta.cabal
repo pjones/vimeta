@@ -58,6 +58,9 @@ library
     Vimeta.UI.Term.Movie
     Vimeta.UI.Term.TV
 
+  other-modules:
+    Paths_vimeta
+
   hs-source-dirs: src
   default-language: Haskell2010
   ghc-options: -Wall -fwarn-incomplete-uni-patterns
@@ -66,13 +69,13 @@ library
   if flag(maintainer)
     ghc-options: -Werror
 
-  build-depends: aeson                >= 0.8   && < 0.9
+  build-depends: aeson                >= 0.8   && < 0.10
                , base                 >= 4.6   && < 5.0
                , byline               >= 0.1   && < 0.3
                , bytestring           >= 0.10  && < 0.11
                , containers           >= 0.5   && < 0.6
                , directory            >= 1.2   && < 1.3
-               , either               >= 4.3   && < 4.4
+               , either               >= 4.3   && < 4.5
                , filepath             >= 1.3   && < 1.5
                , http-client          >= 0.4   && < 0.5
                , http-client-tls      >= 0.2.2 && < 0.3

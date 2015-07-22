@@ -14,6 +14,7 @@ module Vimeta.UI.CommandLine (run) where
 
 --------------------------------------------------------------------------------
 import Data.Monoid
+import Data.Version (showVersion)
 import Options.Applicative
 import System.Exit
 
@@ -23,20 +24,32 @@ import qualified Vimeta.UI.CommandLine.Movie  as Movie
 import qualified Vimeta.UI.CommandLine.TV     as TV
 
 --------------------------------------------------------------------------------
+-- Cabal generated source files:
+import Paths_vimeta (version)
+
+--------------------------------------------------------------------------------
 -- The following is a kludge to avoid the "redundant import" warning
 -- when using GHC >= 7.10.x.  This should be removed after we decide
 -- to stop supporting GHC < 7.10.x.
 import Prelude
 
 --------------------------------------------------------------------------------
-data Command = CmdConfig Config.Options
+data Command = CmdVersion
+             | CmdConfig Config.Options
              | CmdMovie  Movie.Options
              | CmdTV     TV.Options
 
 --------------------------------------------------------------------------------
 optionsParser :: Parser Command
-optionsParser = subparser $ mconcat [config, movie, tv]
+optionsParser = verbose <|> commands
   where
+    verbose =
+      flag' CmdVersion
+      (long "version" <> help "Print version and exit")
+
+    commands =
+      subparser $ mconcat [config, movie, tv]
+
     config =
       command "config"
       (info (CmdConfig <$> Config.optionsParser) (progDesc configDesc))
@@ -64,6 +77,7 @@ run = do
   options <- execParser $ info (optionsParser <**> helper) idm
 
   case options of
+    CmdVersion  -> putStrLn (showVersion version)
     CmdConfig o -> Config.run o
     CmdMovie  o -> Movie.run  o
     CmdTV     o -> TV.run     o
