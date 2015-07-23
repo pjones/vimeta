@@ -39,6 +39,7 @@ flag maintainer
 library
   exposed-modules:
     Vimeta.Core
+    Vimeta.Core.Cache
     Vimeta.Core.Config
     Vimeta.Core.Download
     Vimeta.Core.Format

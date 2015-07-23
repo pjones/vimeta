@@ -45,6 +45,7 @@ import System.IO (Handle, stdout)
 
 --------------------------------------------------------------------------------
 -- Local imports:
+import Vimeta.Core.Cache
 import Vimeta.Core.Config
 
 --------------------------------------------------------------------------------
@@ -110,8 +111,7 @@ verbose msg = do
 --------------------------------------------------------------------------------
 loadTMDBConfig :: (MonadIO m) => Manager -> Key -> EitherT String m TheMovieDB.Configuration
 loadTMDBConfig manager key = do
-  -- FIXME: Cache the config value
-  result <- liftIO $ runTheMovieDBWithManager manager key TheMovieDB.config
+  result <- cacheTMDBConfig (liftIO $ runTheMovieDBWithManager manager key TheMovieDB.config)
 
   case result of
     Left e  -> left (show e)

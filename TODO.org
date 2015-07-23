@@ -1,5 +1,6 @@
 * Milestone: Release 0.2.0.0
-** TODO Cache TMDB.Configuration
+** DONE Cache TMDB.Configuration
+   CLOSED: [2015-07-22 Wed 19:27]
 ** DONE Add support for --version
    CLOSED: [2015-07-21 Tue 21:00]
 ** DONE Search for FIXME and undefined and remove
