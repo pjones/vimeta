@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 name:          vimeta
-version:       0.2.0.0
+version:       0.2.1.0
 synopsis:      Frontend for video metadata tagging tools
 homepage:      http://github.com/pjones/vimeta
 bug-reports:   http://github.com/pjones/vimeta/issues
@@ -64,11 +64,11 @@ library
 
   hs-source-dirs: src
   default-language: Haskell2010
-  ghc-options: -Wall -fwarn-incomplete-uni-patterns
-  ghc-prof-options: -prof -auto-all
 
   if flag(maintainer)
     ghc-options: -Werror
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns
+    ghc-prof-options: -prof -auto-all
 
   build-depends: aeson                >= 0.8   && < 0.10
                , base                 >= 4.6   && < 5.0

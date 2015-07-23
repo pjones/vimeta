@@ -2,6 +2,10 @@
 #+title: Version History
 #+startup: showall
 
+* 0.2.1.0 (July, 23, 2015)
+
+  - Restore support for GHC 7.8.x
+
 * 0.2.0.0 (July 22, 2015)
 
   - Initial public release.

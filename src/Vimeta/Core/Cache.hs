@@ -18,6 +18,7 @@ module Vimeta.Core.Cache
        ) where
 
 --------------------------------------------------------------------------------
+import Control.Monad (liftM)
 import Control.Monad.IO.Class
 import Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy as BL
@@ -65,7 +66,7 @@ readCache filename age = do
       modtime <- liftIO (getModificationTime filename)
 
       if fresh now modtime
-         then Aeson.decode' <$> liftIO (BL.readFile filename)
+         then Aeson.decode' `liftM` liftIO (BL.readFile filename)
          else return Nothing
 
     fresh :: UTCTime -> UTCTime -> Bool

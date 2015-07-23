@@ -21,7 +21,7 @@ module Vimeta.Core.Process
 -- Library imports:
 import Control.Applicative
 import qualified Data.Text as Text
-import System.Exit hiding (die)
+import System.Exit (ExitCode (..))
 import System.Process
 
 --------------------------------------------------------------------------------
