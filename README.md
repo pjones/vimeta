@@ -8,6 +8,8 @@ vimeta - frontend for video metadata tagging tools
 
 # SYNOPSIS
 
+vimeta --version
+
 vimeta config [*options*]
 
 vimeta movie [*options*] *FILE*
