@@ -1,6 +1,0 @@
-[submodule "vendor/themoviedb"]
-	path = vendor/themoviedb
-	url = git://pmade.com/themoviedb.git
-[submodule "vendor/byline"]
-	path = vendor/byline
-	url = git://pmade.com/byline.git
