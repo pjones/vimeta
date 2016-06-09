@@ -1,0 +1,13 @@
+resolver: lts-5.15
+
+packages:
+  - ../
+  - ../vendor/byline
+  - ../vendor/themoviedb
+
+flags:
+  vimeta:
+    maintainer: true
+
+extra-deps:
+  - terminfo-hs-0.2.1

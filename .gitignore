@@ -1,5 +1,3 @@
 /dist
-/.cabal-sandbox/
-/.deps.mk
-/cabal.sandbox.config
-/default.nix
+/.stack-work
+/build/.stack-work
