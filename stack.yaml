@@ -1,9 +1,9 @@
-resolver: lts-5.15
+resolver: lts-7.20
 
 packages:
-  - ../
-  - ../vendor/byline
-  - ../vendor/themoviedb
+  - ./
+  - ./vendor/byline
+  - ./vendor/themoviedb
 
 flags:
   vimeta:
