@@ -6,6 +6,8 @@
 
 vimeta - frontend for video metadata tagging tools
 
+[![Build Status](https://travis-ci.org/pjones/vimeta.svg?branch=master)](https://travis-ci.org/pjones/vimeta)
+
 # SYNOPSIS
 
 vimeta --version
