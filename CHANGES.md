@@ -1,5 +1,11 @@
 # Version History
 
+## 0.2.3.0 (March 19, 2017)
+
+  - Update dependency versions
+
+  - Add Travis CI build status for supported versions of GHC
+
 ## 0.2.2.0 (June 9, 2016)
 
   - Build with LTS-5.15
