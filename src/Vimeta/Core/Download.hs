@@ -123,7 +123,7 @@ runWithoutTempFile vio = do
 -- | Helper function to the actual HTTP downloading into a file handle.
 downloadToHandle :: HC.Manager -> String -> Handle -> IO ()
 downloadToHandle manager url handle = do
-  request  <- HC.parseUrl url
+  request  <- HC.parseRequest url
   response <- HC.httpLbs request manager
   BS.hPut handle (HC.responseBody response)
   hFlush handle

@@ -121,10 +121,9 @@ loadTMDBConfig manager key = do
 -- | Very primitive way of running a 'Vimeta' value with the given 'Context'.
 -- Mostly useful for running vimeta action within another vimeta
 -- action.
-execVimetaWithContext :: (MonadIO m)
-                     => Context
-                     -> Vimeta m a
-                     -> m (Either String a)
+execVimetaWithContext :: Context
+                      -> Vimeta m a
+                      -> m (Either String a)
 execVimetaWithContext context vimeta =
   runEitherT $ runReaderT (unV vimeta) context
 

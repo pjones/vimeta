@@ -20,6 +20,7 @@ module Vimeta.UI.CommandLine.TV
 
 --------------------------------------------------------------------------------
 import Control.Monad
+import Data.Monoid
 import Network.API.TheMovieDB
 import Options.Applicative
 import Vimeta.Core
