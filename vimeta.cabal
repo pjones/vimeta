@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 name:          vimeta
-version:       0.2.2.0
+version:       0.2.3.0
 synopsis:      Frontend for video metadata tagging tools
 homepage:      http://github.com/pjones/vimeta
 bug-reports:   http://github.com/pjones/vimeta/issues
