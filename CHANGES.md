@@ -1,5 +1,9 @@
 # Version History
 
+## 0.2.4.0 (March 20, 2018)
+
+  - Update dependency versions
+
 ## 0.2.3.0 (March 19, 2017)
 
   - Update dependency versions
