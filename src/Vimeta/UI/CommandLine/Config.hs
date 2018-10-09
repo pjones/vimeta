@@ -20,7 +20,7 @@ module Vimeta.UI.CommandLine.Config
 
 --------------------------------------------------------------------------------
 import Control.Monad
-import Control.Monad.Trans.Either
+import Control.Monad.Except
 import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -62,7 +62,7 @@ run opts = do
                  Nothing -> def
                  Just k  -> def {configTMDBKey = k}
 
-  result <- runEitherT (app opts config)
+  result <- runExceptT (app opts config)
 
   case result of
     Left e         -> byline Error e >> exitFailure
@@ -74,7 +74,7 @@ run opts = do
     byline rt = void . runByline . reportLn rt . text . Text.pack
 
 --------------------------------------------------------------------------------
-app :: Options -> Config -> EitherT String IO (Maybe String)
+app :: Options -> Config -> ExceptT String IO (Maybe String)
 app opts config = do
   filename <- writeConfig config
 

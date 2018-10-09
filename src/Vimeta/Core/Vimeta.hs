@@ -33,8 +33,8 @@ module Vimeta.Core.Vimeta
 -- Library imports:
 import Control.Applicative
 import Control.Exception
+import Control.Monad.Except
 import Control.Monad.Reader
-import Control.Monad.Trans.Either
 import Data.Text (Text)
 import qualified Data.Text.IO as Text
 import Network.API.TheMovieDB (TheMovieDB, Key, runTheMovieDBWithManager)
@@ -64,13 +64,13 @@ data Context = Context
 
 --------------------------------------------------------------------------------
 newtype Vimeta m a =
-  Vimeta {unV :: ReaderT Context (EitherT String m) a}
+  Vimeta {unV :: ReaderT Context (ExceptT String m) a}
   deriving (Functor, Applicative, Monad, MonadIO, MonadReader Context)
 
 --------------------------------------------------------------------------------
 -- | Terminate a 'Vimeta' session with an error message.
 die :: (Monad m) => String -> Vimeta m a
-die message = Vimeta $ lift (left message)
+die message = Vimeta $ lift (throwError message)
 
 --------------------------------------------------------------------------------
 runIO :: (MonadIO m) => IO a -> Vimeta m a
@@ -109,12 +109,12 @@ verbose msg = do
   when okay $ liftIO $ Text.hPutStrLn (ctxVerboseH context) msg
 
 --------------------------------------------------------------------------------
-loadTMDBConfig :: (MonadIO m) => Manager -> Key -> EitherT String m TheMovieDB.Configuration
+loadTMDBConfig :: (MonadIO m) => Manager -> Key -> ExceptT String m TheMovieDB.Configuration
 loadTMDBConfig manager key = do
   result <- cacheTMDBConfig (liftIO $ runTheMovieDBWithManager manager key TheMovieDB.config)
 
   case result of
-    Left e  -> left (show e)
+    Left e  -> throwError (show e)
     Right c -> return c
 
 --------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ execVimetaWithContext :: Context
                       -> Vimeta m a
                       -> m (Either String a)
 execVimetaWithContext context vimeta =
-  runEitherT $ runReaderT (unV vimeta) context
+  runExceptT $ runReaderT (unV vimeta) context
 
 --------------------------------------------------------------------------------
 -- | Run a 'Vimeta' operation after loading the configuration file
@@ -134,11 +134,11 @@ execVimeta :: (MonadIO m)
            => (Config -> Config)  -- ^ Modify configuration before running.
            -> Vimeta m a          -- ^ The Vimeta value to execute.
            -> m (Either String a) -- ^ The result.
-execVimeta cf vimeta = runEitherT $ do
+execVimeta cf vimeta = runExceptT $ do
   config <- cf <$> readConfig
   manager <- liftIO $ newManager tlsManagerSettings
   tc <- loadTMDBConfig manager (configTMDBKey config)
-  EitherT $ execVimetaWithContext (Context manager config tc stdout) vimeta
+  ExceptT $ execVimetaWithContext (Context manager config tc stdout) vimeta
 
 --------------------------------------------------------------------------------
 -- | Simple wrapper around 'execVimeta'.

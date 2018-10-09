@@ -25,9 +25,9 @@ module Vimeta.Core.Config
 -- Library imports:
 import Control.Applicative
 import Control.Monad
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Either
-import Data.Aeson
+import Control.Monad.Except
+import Control.Monad.IO.Class (MonadIO, liftIO)
+import Data.Aeson hiding (encodeFile)
 import Data.Aeson.Types (typeMismatch)
 import Data.Text (Text)
 import Data.Yaml (decodeFileEither, encodeFile)
@@ -92,20 +92,20 @@ configFileName = getUserConfigFile "vimeta" "config.yml"
 
 --------------------------------------------------------------------------------
 -- | Read the configuration file and return a 'Config' value or an error.
-readConfig :: (MonadIO m) => EitherT String m Config
+readConfig :: (MonadIO m) => ExceptT String m Config
 readConfig = do
   filename <- liftIO configFileName
   exists   <- liftIO (doesFileExist filename)
 
   if exists
     then decodeConfig filename
-    else left $ missingFile filename
+    else throwError $ missingFile filename
 
   where
-    decodeConfig :: (MonadIO m) => FilePath -> EitherT String m Config
+    decodeConfig :: (MonadIO m) => FilePath -> ExceptT String m Config
     decodeConfig fn = do result <- liftIO $ decodeFileEither fn
                          case result of
-                           Left e  -> left (show e)
+                           Left e  -> throwError (show e)
                            Right a -> return a
 
     missingFile :: FilePath -> String
@@ -113,14 +113,14 @@ readConfig = do
                      "to create " ++ fn
 
 --------------------------------------------------------------------------------
-writeConfig :: (MonadIO m) => Config -> EitherT String m FilePath
+writeConfig :: (MonadIO m) => Config -> ExceptT String m FilePath
 writeConfig c = do
   (filename, exists) <- liftIO $ do
     fn <- configFileName
     ex <- doesFileExist fn
     return (fn, ex)
 
-  when exists $ left (existError filename)
+  when exists $ throwError (existError filename)
 
   liftIO (createDirectoryIfMissing True (takeDirectory filename))
   liftIO (encodeFile filename c)

@@ -3,3 +3,4 @@
 /build/.stack-work
 /cabal.project.local
 /dist-newstyle
+/result

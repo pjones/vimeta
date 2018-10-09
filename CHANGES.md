@@ -1,5 +1,11 @@
 # Version History
 
+## 0.2.5.0 (October 09, 2018)
+
+  - Update dependency versions
+
+  - Replace `EitherT` with `ExceptT`
+
 ## 0.2.4.0 (March 20, 2018)
 
   - Update dependency versions
