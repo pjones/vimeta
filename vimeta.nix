@@ -6,7 +6,7 @@
 }:
 mkDerivation {
   pname = "vimeta";
-  version = "0.2.5.0";
+  version = "0.2.5.1";
   src = ./.;
   isLibrary = true;
   isExecutable = true;
@@ -17,7 +17,7 @@ mkDerivation {
     time-locale-compat transformers xdg-basedir yaml
   ];
   executableHaskellDepends = [ base ];
-  homepage = "http://github.com/pjones/vimeta";
+  homepage = "https://code.devalot.com/open/vimeta";
   description = "Frontend for video metadata tagging tools";
   license = stdenv.lib.licenses.bsd2;
 }

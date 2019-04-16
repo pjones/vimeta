@@ -1,5 +1,11 @@
 # Version History
 
+## 0.2.5.1 (April 16, 2019)
+
+  - Update dependency versions
+
+  - Builds on NixOS 18.09, 19.03, and unstable
+
 ## 0.2.5.0 (October 09, 2018)
 
   - Update dependency versions
