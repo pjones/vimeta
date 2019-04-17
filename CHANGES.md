@@ -1,5 +1,9 @@
 # Version History
 
+## 0.3.0.0 (Unreleased)
+
+  - Restore the ability to use `--help` with subcommands
+
 ## 0.2.5.1 (April 16, 2019)
 
   - Update dependency versions
