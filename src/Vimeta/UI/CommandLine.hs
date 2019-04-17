@@ -50,17 +50,17 @@ optionsParser = verbose <|> commands
     commands =
       subparser $ mconcat [config, movie, tv]
 
+    subcommand name desc parser =
+      command name (info (parser <**> helper) (progDesc desc))
+
     config =
-      command "config"
-      (info (CmdConfig <$> Config.optionsParser) (progDesc configDesc))
+      subcommand "config" configDesc (CmdConfig <$> Config.optionsParser)
 
     movie =
-      command "movie"
-      (info (CmdMovie <$> Movie.optionsParser) (progDesc movieDesc))
+      subcommand "movie" movieDesc (CmdMovie <$> Movie.optionsParser)
 
     tv =
-      command "tv"
-      (info (CmdTV <$> TV.optionsParser) (progDesc tvDesc))
+      subcommand "tv" tvDesc (CmdTV <$> TV.optionsParser)
 
     configDesc =
       "Create a new configuration file"
