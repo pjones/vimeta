@@ -22,7 +22,6 @@ module Vimeta.Core.Download
 -- Library imports:
 import qualified Data.ByteString.Lazy as BS
 import Data.Maybe
-import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Network.HTTP.Client as HC

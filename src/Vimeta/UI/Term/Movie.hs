@@ -18,7 +18,6 @@ module Vimeta.UI.Term.Movie
        ) where
 
 --------------------------------------------------------------------------------
-import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Network.API.TheMovieDB

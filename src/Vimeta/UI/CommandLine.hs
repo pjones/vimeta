@@ -13,7 +13,6 @@ the LICENSE file.
 module Vimeta.UI.CommandLine (run) where
 
 --------------------------------------------------------------------------------
-import Data.Monoid
 import Data.Version (showVersion)
 import Options.Applicative
 import System.Exit
@@ -26,12 +25,6 @@ import qualified Vimeta.UI.CommandLine.TV     as TV
 --------------------------------------------------------------------------------
 -- Cabal generated source files:
 import Paths_vimeta (version)
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 data Command = CmdVersion

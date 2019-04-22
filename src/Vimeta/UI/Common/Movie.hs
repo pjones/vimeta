@@ -17,18 +17,11 @@ module Vimeta.UI.Common.Movie
        ) where
 
 --------------------------------------------------------------------------------
-import Control.Applicative
 import qualified Data.Map as Map
 import Data.Maybe
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import Vimeta.Core
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 -- | Run the tagger for the given file/movie combo.

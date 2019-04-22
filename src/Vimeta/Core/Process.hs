@@ -19,7 +19,6 @@ module Vimeta.Core.Process
 
 --------------------------------------------------------------------------------
 -- Library imports:
-import Control.Applicative
 import Data.Text (Text)
 import qualified Data.Text as Text
 import System.Exit (ExitCode (..))
@@ -29,12 +28,6 @@ import System.Process
 -- Local imports:
 import Vimeta.Core.Config
 import Vimeta.Core.Vimeta
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 -- | Run the tagging command unless dry-run mode is in effect.

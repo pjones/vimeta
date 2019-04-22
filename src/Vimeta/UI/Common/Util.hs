@@ -19,7 +19,6 @@ module Vimeta.UI.Common.Util
        ) where
 
 --------------------------------------------------------------------------------
-import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Time (Day, formatTime)
