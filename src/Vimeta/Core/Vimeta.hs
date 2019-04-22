@@ -31,7 +31,6 @@ module Vimeta.Core.Vimeta
 
 --------------------------------------------------------------------------------
 -- Library imports:
-import Control.Applicative
 import Control.Exception
 import Control.Monad.Except
 import Control.Monad.Reader
@@ -48,12 +47,6 @@ import System.IO (Handle, stdout)
 -- Local imports:
 import Vimeta.Core.Cache
 import Vimeta.Core.Config
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 data Context = Context

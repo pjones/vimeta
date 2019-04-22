@@ -20,7 +20,6 @@ module Vimeta.UI.CommandLine.Common
        ) where
 
 --------------------------------------------------------------------------------
-import Data.Monoid
 import Options.Applicative
 import Vimeta.Core
 

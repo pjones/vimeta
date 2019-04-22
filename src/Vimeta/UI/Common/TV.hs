@@ -21,13 +21,11 @@ module Vimeta.UI.Common.TV
        ) where
 
 --------------------------------------------------------------------------------
-import Control.Applicative
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Either
 import Data.Map (Map)
 import qualified Data.Map as Map
-import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
@@ -37,12 +35,6 @@ import Text.Parsec
 -- Local imports:
 import Vimeta.Core
 import qualified Vimeta.Core.MappingFile as MF
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 -- | A simple way to specify a single episode.

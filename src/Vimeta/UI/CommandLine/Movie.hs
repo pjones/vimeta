@@ -19,7 +19,6 @@ module Vimeta.UI.CommandLine.Movie
        ) where
 
 --------------------------------------------------------------------------------
-import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
@@ -30,12 +29,6 @@ import Vimeta.UI.CommandLine.Common
 import Vimeta.UI.Common.Movie
 import Vimeta.UI.Term.Common
 import Vimeta.UI.Term.Movie
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 data Options = Options

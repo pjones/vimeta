@@ -20,7 +20,6 @@ module Vimeta.Core.MappingFile
 
 --------------------------------------------------------------------------------
 -- Library imports:
-import Control.Applicative hiding ((<|>))
 import Control.Monad.Identity
 import Data.Char (isSpace)
 import Data.Either
@@ -34,12 +33,6 @@ import Text.Parsec
 --------------------------------------------------------------------------------
 -- Local imports:
 import Vimeta.Core.Vimeta
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 -- | Parser type.

@@ -18,7 +18,6 @@ module Vimeta.UI.Term.TV
        ) where
 
 --------------------------------------------------------------------------------
-import Data.Monoid
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import System.Console.Byline

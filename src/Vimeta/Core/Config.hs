@@ -23,7 +23,6 @@ module Vimeta.Core.Config
 
 --------------------------------------------------------------------------------
 -- Library imports:
-import Control.Applicative
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.IO.Class (MonadIO, liftIO)
@@ -39,12 +38,6 @@ import System.FilePath (takeDirectory)
 --------------------------------------------------------------------------------
 -- Local imports:
 import Vimeta.Core.Tagger
-
---------------------------------------------------------------------------------
--- The following is a kludge to avoid the "redundant import" warning
--- when using GHC >= 7.10.x.  This should be removed after we decide
--- to stop supporting GHC < 7.10.x.
-import Prelude
 
 --------------------------------------------------------------------------------
 -- | Vimeta configuration.
