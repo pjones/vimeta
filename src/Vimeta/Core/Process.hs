@@ -20,6 +20,7 @@ module Vimeta.Core.Process
 --------------------------------------------------------------------------------
 -- Library imports:
 import Control.Applicative
+import Data.Text (Text)
 import qualified Data.Text as Text
 import System.Exit (ExitCode (..))
 import System.Process
@@ -37,7 +38,7 @@ import Prelude
 
 --------------------------------------------------------------------------------
 -- | Run the tagging command unless dry-run mode is in effect.
-tagFile :: String -> Vimeta IO ()
+tagFile :: Text -> Vimeta IO ()
 tagFile cmd = do
   dryRun <- configDryRun <$> asks ctxConfig
   if dryRun then doDryRun else doRealRun
@@ -45,10 +46,15 @@ tagFile cmd = do
   where
     doDryRun :: Vimeta IO ()
     doDryRun = verbose "dry run: skipping tagging command" >>
-               verbose (Text.pack cmd)
+               verbose cmd
 
     doRealRun :: Vimeta IO ()
-    doRealRun = do code <- liftIO (spawnCommand cmd >>= waitForProcess)
-                   case code of
-                     ExitSuccess   -> return ()
-                     ExitFailure _ -> die ("command failed: " ++ cmd)
+    doRealRun = do
+      verbose cmd
+      let cmd' = Text.unpack cmd
+      code <- liftIO (spawnCommand cmd' >>= waitForProcess)
+
+      case code of
+        ExitSuccess   -> return ()
+        ExitFailure n -> die ("command failed (" ++ show n ++ "): " ++ cmd')
+

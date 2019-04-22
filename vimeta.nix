@@ -6,7 +6,7 @@
 }:
 mkDerivation {
   pname = "vimeta";
-  version = "0.2.5.1";
+  version = "0.3.0.0";
   src = ./.;
   isLibrary = true;
   isExecutable = true;

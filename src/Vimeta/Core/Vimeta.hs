@@ -37,6 +37,7 @@ import Control.Monad.Except
 import Control.Monad.Reader
 import Data.Text (Text)
 import qualified Data.Text.IO as Text
+import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Network.API.TheMovieDB (TheMovieDB, Key, runTheMovieDBWithManager)
 import qualified Network.API.TheMovieDB as TheMovieDB
 import Network.HTTP.Client (Manager, newManager)
@@ -128,6 +129,11 @@ execVimetaWithContext context vimeta =
   runExceptT $ runReaderT (unV vimeta) context
 
 --------------------------------------------------------------------------------
+-- | Force the current process to use UTF-8 for output.
+forceUTF8 :: IO ()
+forceUTF8 = setLocaleEncoding utf8
+
+--------------------------------------------------------------------------------
 -- | Run a 'Vimeta' operation after loading the configuration file
 -- from disk.
 execVimeta :: (MonadIO m)
@@ -135,6 +141,7 @@ execVimeta :: (MonadIO m)
            -> Vimeta m a          -- ^ The Vimeta value to execute.
            -> m (Either String a) -- ^ The result.
 execVimeta cf vimeta = runExceptT $ do
+  liftIO forceUTF8
   config <- cf <$> readConfig
   manager <- liftIO $ newManager tlsManagerSettings
   tc <- loadTMDBConfig manager (configTMDBKey config)

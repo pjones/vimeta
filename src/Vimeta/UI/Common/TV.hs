@@ -64,7 +64,7 @@ tagFileWithEpisode file (EpisodeCtx tv season episode) = do
   withArtwork (seasonPosterURLs tmdbCfg season) $ \artwork ->
     case fromFormatString (formatMap artwork) "config.tv" format of
       Left e    -> die e
-      Right cmd -> tagFile (Text.unpack cmd)
+      Right cmd -> tagFile cmd
 
   where
     formatMap :: Maybe FilePath -> FormatTable
