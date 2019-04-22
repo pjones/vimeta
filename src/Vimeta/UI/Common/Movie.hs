@@ -42,7 +42,7 @@ tagMovie filename movie = do
   withArtwork (moviePosterURLs tmdbCfg movie) $ \artwork ->
     case fromFormatString (formatMap artwork) "config.cmd_movie" format of
       Left e    -> die e
-      Right cmd -> tagFile (Text.unpack cmd)
+      Right cmd -> tagFile cmd
 
   where
     formatMap :: Maybe FilePath -> FormatTable
