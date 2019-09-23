@@ -15,8 +15,8 @@ let
       then super.http-client_0_6_2
       else super.http-client;
 
-    byline = self.callPackage "${byline}/byline.nix" { };
-    themoviedb = self.callPackage "${themoviedb}/themoviedb.nix" { };
+    byline = import "${byline}/default.nix" { inherit pkgs; };
+    themoviedb = import "${themoviedb}/default.nix" { inherit pkgs; };
   };
 
   # Apply the overrides from above:
