@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 name:          vimeta
-version:       0.3.0.0
+version:       0.3.1.0
 synopsis:      Frontend for video metadata tagging tools
 homepage:      https://code.devalot.com/open/vimeta
 bug-reports:   https://code.devalot.com/open/vimeta/issues
@@ -13,6 +13,7 @@ category:      Video
 stability:     experimental
 build-type:    Simple
 cabal-version: 1.18
+tested-with:   GHC == 8.6.5, GHC == 8.8.3
 description:
   Vimeta is a tool to fetch video metadata from the interwebs and
   update video files using a tagging tool.
