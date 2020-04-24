@@ -5,10 +5,12 @@
 , themoviedb ? sources.themoviedb
 , ghcide ? sources.ghcide-nix
 , ormolu ? sources.ormolu
+, ghc ? "default"
 }:
 
 nix-hs {
   cabal = ./vimeta.cabal;
+  compiler = ghc;
 
   buildInputs = with pkgs; [ atomicparsley ];
 
@@ -21,10 +23,5 @@ nix-hs {
       inherit (lib) pkgs;
       ormoluCompiler = lib.compilerName;
     }).ormolu;
-
-    optparse-applicative =
-      if super ? optparse-applicative_0_15_0_0
-        then super.optparse-applicative_0_15_0_0
-        else optparse-applicative;
   };
 }
