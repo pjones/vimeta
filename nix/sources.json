@@ -1,14 +1,8 @@
 {
     "byline": {
         "ref": "next",
-        "repo": "https://code.devalot.com/open/byline.git",
+        "repo": "https://github.com/pjones/byline.git",
         "rev": "486d8177b36288c6c607e5dcc34aae940b9ab031",
-        "type": "git"
-    },
-    "ghcide-nix": {
-        "ref": "master",
-        "repo": "https://code.devalot.com/pjones/ghcide-nix.git",
-        "rev": "471990016e47f6eaab5d6aeeb2da6f58aa581bb7",
         "type": "git"
     },
     "niv": {
@@ -24,10 +18,16 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nix-hs": {
-        "ref": "next",
-        "repo": "https://code.devalot.com/open/nix-hs.git",
-        "rev": "b267b7dff1e83909e537b5e9af7de0975caf112c",
-        "type": "git"
+        "branch": "master",
+        "description": "Haskell + nixpkgs = nix-hs",
+        "homepage": null,
+        "owner": "pjones",
+        "repo": "nix-hs",
+        "rev": "26fcc02fff3aafb73de29165ecf82abd3b088e98",
+        "sha256": "021rzc1g1a80rh96whpf5vr9h2angy1janv71n0clbv01lizn9ar",
+        "type": "tarball",
+        "url": "https://github.com/pjones/nix-hs/archive/26fcc02fff3aafb73de29165ecf82abd3b088e98.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
         "branch": "nixos-20.03",
@@ -41,22 +41,10 @@
         "url": "https://github.com/NixOS/nixpkgs-channels/archive/95b9c99f6d091273572ff1ec62b97b6ad3f68bdf.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
-    "ormolu": {
-        "branch": "master",
-        "description": "A formatter for Haskell source code",
-        "homepage": null,
-        "owner": "tweag",
-        "repo": "ormolu",
-        "rev": "39059761a501c0fd39fc2f1d4ca136d511e77451",
-        "sha256": "0phbs6f9s6zllc0ndnqr3kvkj12sj6a7lfiwbhwx66sh3ccmip7i",
-        "type": "tarball",
-        "url": "https://github.com/tweag/ormolu/archive/39059761a501c0fd39fc2f1d4ca136d511e77451.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
     "themoviedb": {
         "ref": "next",
-        "repo": "https://code.devalot.com/open/themoviedb.git",
-        "rev": "77e6989408a3806f1cc93e98485b5ad3a2829bd3",
+        "repo": "https://github.com/pjones/themoviedb.git",
+        "rev": "9588990fcb3cf5185e41b9c6a8f91d44a4046f91",
         "type": "git"
     }
 }
