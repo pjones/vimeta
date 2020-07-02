@@ -9,70 +9,56 @@ the LICENSE file.
 
 -}
 
---------------------------------------------------------------------------------
 module Vimeta.UI.CommandLine (run) where
 
---------------------------------------------------------------------------------
+import qualified Byline.Exit as B
 import Data.Version (showVersion)
 import Options.Applicative
-import System.Exit
-
---------------------------------------------------------------------------------
-import qualified Vimeta.UI.CommandLine.Config as Config
-import qualified Vimeta.UI.CommandLine.Movie  as Movie
-import qualified Vimeta.UI.CommandLine.TV     as TV
-
---------------------------------------------------------------------------------
--- Cabal generated source files:
 import Paths_vimeta (version)
+import qualified Vimeta.UI.CommandLine.Config as Config
+import qualified Vimeta.UI.CommandLine.Movie as Movie
+import qualified Vimeta.UI.CommandLine.TV as TV
 
---------------------------------------------------------------------------------
-data Command = CmdVersion
-             | CmdConfig Config.Options
-             | CmdMovie  Movie.Options
-             | CmdTV     TV.Options
+data Command
+  = CmdVersion
+  | CmdConfig Config.Options
+  | CmdMovie Movie.Options
+  | CmdTV TV.Options
 
---------------------------------------------------------------------------------
 optionsParser :: Parser Command
 optionsParser = verbose <|> commands
   where
     verbose =
-      flag' CmdVersion
-      (long "version" <> help "Print version and exit")
-
+      flag'
+        CmdVersion
+        (long "version" <> help "Print version and exit")
     commands =
       subparser $ mconcat [config, movie, tv]
-
     subcommand name desc parser =
       command name (info (parser <**> helper) (progDesc desc))
-
     config =
       subcommand "config" configDesc (CmdConfig <$> Config.optionsParser)
-
     movie =
       subcommand "movie" movieDesc (CmdMovie <$> Movie.optionsParser)
-
     tv =
       subcommand "tv" tvDesc (CmdTV <$> TV.optionsParser)
-
     configDesc =
       "Create a new configuration file"
-
     movieDesc =
       "Tag a movie file using data from TheMovieDB.org"
-
     tvDesc =
       "Tag episode files using data from TheMovieDB.org"
 
---------------------------------------------------------------------------------
 run :: IO ()
 run = do
   options <- execParser $ info (optionsParser <**> helper) idm
 
-  case options of
-    CmdVersion  -> putStrLn (showVersion version)
-    CmdConfig o -> Config.run o
-    CmdMovie  o -> Movie.run  o
-    CmdTV     o -> TV.run     o
+  result <- case options of
+    CmdVersion -> putStrLn (showVersion version) $> Right ()
+    CmdConfig o -> Config.run o $> Right ()
+    CmdMovie o -> Movie.run o
+    CmdTV o -> TV.run o
 
-  exitSuccess
+  case result of
+    Left e -> B.die (B.text $ toText e)
+    Right () -> exitSuccess
