@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 {-
 
 This file is part of the vimeta package. It is subject to the license
@@ -11,46 +9,43 @@ the LICENSE file.
 
 -}
 
---------------------------------------------------------------------------------
--- | Search for a TV series by interacting with the user through the terminal.
+-- | Search for a TV series by interacting with the user through the
+-- terminal.
 module Vimeta.UI.Term.TV
-       ( tvSearch
-       ) where
+  ( tvSearch,
+  )
+where
 
---------------------------------------------------------------------------------
-import qualified Data.Text as Text
+import Byline.Menu
 import Network.API.TheMovieDB
-import System.Console.Byline
-import Vimeta.Core hiding (ask)
+import Vimeta.Core
 import Vimeta.UI.Common.Util
 import Vimeta.UI.Term.Common
 
---------------------------------------------------------------------------------
-tvSearch :: Vimeta (Byline IO) TV
+newtype TVItem = TVItem TV
+
+instance ToStylizedText TVItem where
+  toStylizedText (TVItem series) =
+    mconcat
+      [ text (tvName series),
+        text (parens $ dayRange (tvFirstAirDate series) (tvLastAirDate series))
+      ]
+
+tvSearch :: MonadIO m => Vimeta m TV
 tvSearch = do
-  let prompt  = "search (series name): "
-      mprompt = "Which is the correct TV series? "
+  let prompt = text "search (series name): "
+      mprompt = text "Which is the correct TV series? "
       sprompt = "a search term is required" <> fg red
       eprompt = "please choose a TV series" <> fg red
+      mkMenu = menuBanner (text "Choose a TV series:") . menu
+      logID tv = verbose $ "using TV ID: " <> show (tvID tv)
 
-  name <- byline (askUntil prompt Nothing $ notEmpty sprompt)
-  series <- tmdb (searchTV name)
-  answer <- byline $ askWithMenuRepeatedly (mkMenu series) mprompt eprompt
-
-  case answer of
-    Match tv -> logID tv >> tmdb (fetchFullTVSeries (tvID tv))
-    _        -> die "you need to pick a valid TV series"
-
-
-  where
-    -- The menu.
-    mkMenu series = banner "Choose a TV series:" (menu series displayTV)
-
-    -- Function to display possible matches.
-    displayTV series =
-      mconcat [ text (tvName series)
-              , text (parens $ dayRange (tvFirstAirDate series) (tvLastAirDate series))
-              ]
-
-    -- Log the TV ID.
-    logID tv = verbose $ "using TV ID: " <> Text.pack (show $ tvID tv)
+  name <- askUntil prompt Nothing (return . notBlank sprompt)
+  series <-
+    tmdb (searchTV name)
+      >>= ( nonEmpty >>> \case
+              Nothing -> throwError ("no matches for " <> toString name)
+              Just xs -> pure (TVItem <$> xs)
+          )
+  TVItem tv <- askWithMenuRepeatedly (mkMenu series) mprompt eprompt
+  logID tv >> tmdb (fetchFullTVSeries (tvID tv))

@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 {-
 
 This file is part of the vimeta package. It is subject to the license
@@ -11,54 +9,54 @@ the LICENSE file.
 
 -}
 
---------------------------------------------------------------------------------
 -- | Search for a movie and interact with the user through the terminal.
 module Vimeta.UI.Term.Movie
-       ( movieSearch
-       ) where
+  ( movieSearch,
+  )
+where
 
---------------------------------------------------------------------------------
-import Data.Text (Text)
+import Byline.Menu
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
-import System.Console.Byline
-import Vimeta.Core hiding (ask)
+import Vimeta.Core
 import Vimeta.UI.Common.Util
 import Vimeta.UI.Term.Common
 
---------------------------------------------------------------------------------
+-- | A wrapper around a movie.
+newtype MovieItem = MovieItem Movie
+
+instance ToStylizedText MovieItem where
+  toStylizedText (MovieItem m) =
+    mconcat
+      [ text (movieTitle m),
+        text (parens $ dayAsYear $ movieReleaseDate m)
+      ]
+
 -- | Search for a movie and interact with the user through the terminal.
-movieSearch :: Text -> Vimeta (Byline IO) Movie
+movieSearch :: MonadIO m => Text -> Vimeta m Movie
 movieSearch initial = do
-  name   <- byline $ askUntil searchPrompt (Just initial) (notEmpty searchErr)
-  movies <- tmdb (searchMovies name)
-  answer <- byline $ askWithMenuRepeatedly (mkMenu movies) prompt eprompt
-
-  case answer of
-    Match movie -> logID movie >> tmdb (fetchMovie (movieID movie))
-    _           -> die "you need to pick a valid movie"
-
+  name <- askUntil searchPrompt (Just initial) (return . notBlank searchErr)
+  movies <-
+    tmdb (searchMovies name)
+      >>= ( nonEmpty >>> \case
+              Nothing -> throwError ("no matches for: " <> toString name)
+              Just ms -> pure (MovieItem <$> ms)
+          )
+  MovieItem movie <- askWithMenuRepeatedly (mkMenu movies) prompt eprompt
+  logID movie >> tmdb (fetchMovie (movieID movie))
   where
     -- The Menu.
-    mkMenu movies = banner "Choose a movie:" (menu movies displayMovie)
-
+    mkMenu movies = menuBanner (text "Choose a movie:") (menu movies)
     -- Search prompt.
-    searchPrompt = "search (movie name): "
-
+    searchPrompt = text "search (movie name): "
     -- Search error text.
     searchErr = "please enter a valid search term" <> fg red
-
     -- Menu prompt.
-    prompt = "Which is the correct movie? "
-
+    prompt = text "Which is the correct movie? "
     -- Prompt when someone fails to pick a movie.
     eprompt = "please choose a valid movie" <> fg red
-
-    -- Menu item display for a movie.
-    displayMovie m = mconcat [ text (movieTitle m)
-                             , text (parens $ dayAsYear $ movieReleaseDate m)
-                             ]
-
     -- Log a movie ID.
-    logID movie = verbose $ "using movie ID: " <>
-                  Text.pack (show $ movieID movie)
+    logID movie =
+      verbose $
+        "using movie ID: "
+          <> Text.pack (show $ movieID movie)
