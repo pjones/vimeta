@@ -10,6 +10,9 @@ nix-hs {
   compiler = ghc;
 
   overrides = lib: self: super: {
-    byline = (import sources.byline { inherit (lib) pkgs; }).byline;
+    byline = (import sources.byline {
+      inherit (lib) pkgs;
+      inherit ghc;
+    }).byline;
   };
 }
