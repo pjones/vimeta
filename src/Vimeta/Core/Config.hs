@@ -12,8 +12,8 @@
 --   contained in the LICENSE file.
 --
 -- License: BSD-2-Clause
-
--- | The configuration file.
+--
+-- The configuration file.
 module Vimeta.Core.Config
   ( Config (..),
     defaultConfig,
