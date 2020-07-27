@@ -5,10 +5,10 @@
         "homepage": "",
         "owner": "pjones",
         "repo": "byline",
-        "rev": "f0273cad6d3b316a07e919c136fcfce6eddeda99",
-        "sha256": "14k0frgdfjy4yq2nd2g6pxsycfikgnvsr8pf2j2z05266pixw6gl",
+        "rev": "3da0bc80a4d671cc765026ca72cc0a030bd5d74c",
+        "sha256": "0mbjmqwfsyximpm8mazlqvk2z9kf0qblcvrhs6s2cbxgk8g3m8cz",
         "type": "tarball",
-        "url": "https://github.com/pjones/byline/archive/f0273cad6d3b316a07e919c136fcfce6eddeda99.tar.gz",
+        "url": "https://github.com/pjones/byline/archive/3da0bc80a4d671cc765026ca72cc0a030bd5d74c.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {

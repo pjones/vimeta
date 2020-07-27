@@ -12,14 +12,13 @@
 --   contained in the LICENSE file.
 --
 -- License: BSD-2-Clause
-
--- | Caching functions.
+--
+-- Caching functions.
 module Vimeta.Core.Cache
   ( cacheTMDBConfig,
   )
 where
 
-import Control.Monad (liftM)
 import Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy as BL
 import Data.Time.Calendar
@@ -30,7 +29,7 @@ import System.Environment.XDG.BaseDir (getUserCacheFile)
 import System.FilePath (takeDirectory)
 
 -- | Manage cache file expiration.
-data Age
+newtype Age
   = -- | Cap to N days.
     MaxDays Int
 
@@ -63,7 +62,7 @@ readCache filename age = do
       modtime <- liftIO (getModificationTime filename)
 
       if fresh now modtime
-        then Aeson.decode' `liftM` liftIO (BL.readFile filename)
+        then Aeson.decode' <$> liftIO (BL.readFile filename)
         else return Nothing
     fresh :: UTCTime -> UTCTime -> Bool
     fresh now modtime = ageAsTime age now <= modtime
