@@ -3,8 +3,24 @@ on:
   push:
     tags: [ 'v*' ]
 jobs:
-  build:
-    name: Upload Release Asset
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+
+  build_release:
+    name: Build Release
+    needs: create_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -12,11 +28,12 @@ jobs:
         cabal: ["3.2"]
         ghc: ["8.6.5"]
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Record Project Name
-        run: echo "::set-env name=PROJECT::$(echo "$GITHUB_REPOSITORY" | cut -d/ -f2 | sed -e "s/:.*//")
+      - name: Install Windows Dependencies
+        if: matrix.os == 'windows-latest'
+        run: choco install zip
 
       - name: Setup Haskell
         id: setup-haskell-cabal
@@ -36,29 +53,19 @@ jobs:
           path: ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
           key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
 
-      - name: Install
-        run: |
-          cabal install all --installdir=artifacts --install-method=copy
-          zip --junk-paths $PROJECT-${{ matrix.os }}.zip artifacts/*
+      - name: Cabal Install
+        run: cabal install all --installdir=artifacts --install-method=copy
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+      - name: Create Archive
+        run: zip -j ${{ matrix.os }}.zip artifacts/*
 
-      - name: Upload Release Asset
+      - name: Upload Archive
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.PROJECT }}-${{ matrix.os }}.zip
-          asset_name: ${{ env.PROJECT }}-${{ matrix.os }}.zip
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./${{ matrix.os }}.zip
+          asset_name: ${{ matrix.os }}.zip
           asset_content_type: application/zip
