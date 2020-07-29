@@ -32,8 +32,7 @@ import Control.Monad.Catch
 import Control.Monad.Except
 import qualified Data.Text.IO as Text
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
-import Network.API.TheMovieDB (Key, TheMovieDB, runTheMovieDBWithManager)
-import qualified Network.API.TheMovieDB as TheMovieDB
+import qualified Network.API.TheMovieDB as TMDb
 import Network.HTTP.Client (Manager, newManager)
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Vimeta.Core.Cache
@@ -42,7 +41,7 @@ import Vimeta.Core.Config
 data Context = Context
   { ctxManager :: Manager,
     ctxConfig :: Config,
-    ctxTMDBCfg :: TheMovieDB.Configuration,
+    ctxTMDBCfg :: TMDb.Configuration,
     ctxVerboseH :: Handle
   }
 
@@ -69,14 +68,15 @@ runIOE :: (MonadIO m) => IO (Either String a) -> Vimeta m a
 runIOE io = runIO io >>= either (throwError . show) return
 
 -- | Run a 'TheMovieDB' operation.
-tmdb :: (MonadIO m) => TheMovieDB a -> Vimeta m a
+tmdb :: (MonadIO m) => TMDb.TheMovieDB a -> Vimeta m a
 tmdb t = do
   context' <- ask
 
   let manager = ctxManager context'
       key = configTMDBKey (ctxConfig context')
+      settings = TMDb.defaultSettings key
 
-  result <- liftIO (runTheMovieDBWithManager manager key t)
+  result <- liftIO (TMDb.runTheMovieDBWithManager manager settings t)
 
   case result of
     Left e -> throwError (show e)
@@ -92,9 +92,16 @@ verbose msg = do
 
   when okay $ liftIO $ Text.hPutStrLn (ctxVerboseH context) msg
 
-loadTMDBConfig :: (MonadIO m) => Manager -> Key -> ExceptT String m TheMovieDB.Configuration
-loadTMDBConfig manager key = do
-  result <- cacheTMDBConfig (liftIO $ runTheMovieDBWithManager manager key TheMovieDB.config)
+loadTMDBConfig ::
+  (MonadIO m) =>
+  Manager ->
+  TMDb.Settings ->
+  ExceptT String m TMDb.Configuration
+loadTMDBConfig manager settings = do
+  result <-
+    cacheTMDBConfig
+      ( liftIO $ TMDb.runTheMovieDBWithManager manager settings TMDb.config
+      )
 
   case result of
     Left e -> throwError (show e)
@@ -112,7 +119,7 @@ execVimetaWithContext context vimeta =
   unV vimeta
     & (`runReaderT` context)
     & runBylineT
-    & (>>= (maybe (throwError "EOF") pure))
+    & (>>= maybe (throwError "EOF") pure)
     & runExceptT
 
 -- | Force the current process to use UTF-8 for output.
@@ -133,7 +140,7 @@ execVimeta cf vimeta = runExceptT $ do
   liftIO forceUTF8
   config <- cf <$> readConfig
   manager <- liftIO $ newManager tlsManagerSettings
-  tc <- loadTMDBConfig manager (configTMDBKey config)
+  tc <- loadTMDBConfig manager (TMDb.defaultSettings (configTMDBKey config))
   ExceptT $ execVimetaWithContext (Context manager config tc stdout) vimeta
 
 -- | Simple wrapper around 'execVimeta'.

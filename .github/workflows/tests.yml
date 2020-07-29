@@ -51,9 +51,6 @@ jobs:
           name: logs-${{ matrix.os }}-ghc${{ matrix.ghc }}
           path: logs/
 
-      - name: Test
-        run: cabal test all
-
       - name: Install
         run: cabal install all --installdir=artifacts --install-method=copy
 

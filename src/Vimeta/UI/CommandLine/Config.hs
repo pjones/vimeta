@@ -20,7 +20,6 @@ module Vimeta.UI.CommandLine.Config
 where
 
 import qualified Byline.Exit as B
-import qualified Data.Text as Text
 import Options.Applicative
 import Vimeta.Core
 
@@ -31,17 +30,17 @@ data Options = Options
 
 optionsParser :: Parser Options
 optionsParser =
-  Options <$> optional (Text.pack <$> strOption getKey)
+  Options
+    <$> optional
+      ( strOption $
+          mconcat
+            [ short 'k',
+              long "key",
+              metavar "KEY",
+              help "Set the API key to KEY"
+            ]
+      )
     <*> pure AtomicParsley
-  where
-    -- Parser options for @optsKey@
-    getKey =
-      mconcat
-        [ short 'k',
-          long "key",
-          metavar "KEY",
-          help "Set the API key to KEY"
-        ]
 
 run :: Options -> IO ()
 run opts = do

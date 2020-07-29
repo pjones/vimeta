@@ -21,9 +21,9 @@ module Vimeta.UI.Common.TV
   )
 where
 
-import qualified Data.Map as Map
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
+import Relude.Extra.Map
 import Text.Parsec
 import Vimeta.Core
 import qualified Vimeta.Core.MappingFile as MF
@@ -49,14 +49,14 @@ tagFileWithEpisode file (EpisodeCtx tv season episode) = do
   where
     formatMap :: Maybe FilePath -> FormatTable
     formatMap artwork =
-      Map.fromList
+      fromList
         [ ('Y', formatFullDate $ episodeAirDate episode),
-          ('a', Text.pack <$> artwork),
+          ('a', toText <$> artwork),
           ('d', Just (Text.take 255 $ episodeOverview episode)),
-          ('e', Just . Text.pack . show $ episodeNumber episode),
-          ('f', Just $ Text.pack file),
+          ('e', Just . show $ episodeNumber episode),
+          ('f', Just $ toText file),
           ('n', Just $ tvName tv),
-          ('s', Just . Text.pack . show $ episodeSeasonNumber episode),
+          ('s', Just . show $ episodeSeasonNumber episode),
           ('t', Just $ episodeName episode),
           ('y', formatYear $ episodeAirDate episode)
         ]
@@ -90,7 +90,7 @@ tagWithSpec tv specs = do
     table :: Map EpisodeSpec EpisodeCtx
     table = makeTVMap tv
     mapping :: [Either (FilePath, EpisodeSpec) (FilePath, EpisodeCtx)]
-    mapping = map (\(f, s) -> check (Map.lookup s table) f s) specs
+    mapping = map (\(f, s) -> check (lookup s table) f s) specs
     check ::
       Maybe EpisodeCtx ->
       FilePath ->
@@ -101,7 +101,7 @@ tagWithSpec tv specs = do
     badFiles :: [(FilePath, EpisodeSpec)] -> Text
     badFiles =
       Text.intercalate "\n"
-        . map (\(f, s) -> Text.pack f <> " " <> episodeSpecAsText s)
+        . map (\(f, s) -> toText f <> " " <> episodeSpecAsText s)
 
 -- | Tag the given files, starting at the given 'EpisodeSpec'.
 tagWithFileOrder ::
@@ -130,10 +130,7 @@ episodeSpecFromCtx (EpisodeCtx _ _ e) = episodeSpec e
 
 -- | Turn an 'EpisodeSpec' into something that can be printed.
 episodeSpecAsText :: EpisodeSpec -> Text
-episodeSpecAsText (EpisodeSpec s e) =
-  "S" <> Text.pack (show s)
-    <> "E"
-    <> Text.pack (show e)
+episodeSpecAsText (EpisodeSpec s e) = "S" <> show s <> "E" <> show e
 
 -- | Flatten a TV/Season/Episode tree into a list of episodes.
 flattenTV :: TV -> [EpisodeCtx]
@@ -148,10 +145,10 @@ startingAt spec = dropWhile (\(EpisodeCtx _ _ e) -> spec /= episodeSpec e)
 
 -- | Make an episode look-up table.
 makeTVMap :: TV -> Map EpisodeSpec EpisodeCtx
-makeTVMap = foldr insert Map.empty . flattenTV
+makeTVMap = foldr insert mempty . flattenTV
   where
     insert :: EpisodeCtx -> Map EpisodeSpec EpisodeCtx -> Map EpisodeSpec EpisodeCtx
-    insert e = Map.insert (episodeSpecFromCtx e) e
+    insert e = (<> one (episodeSpecFromCtx e, e))
 
 episodeSpecParser :: MF.Parser EpisodeSpec
 episodeSpecParser = go <?> "episode spec (S#E#)"

@@ -20,13 +20,17 @@ module Vimeta.Core.Cache
 where
 
 import Data.Aeson as Aeson
-import qualified Data.ByteString.Lazy as BL
 import Data.Time.Calendar
 import Data.Time.Clock
 import qualified Network.API.TheMovieDB as TheMovieDB
-import System.Directory (createDirectoryIfMissing, doesFileExist, getModificationTime)
-import System.Environment.XDG.BaseDir (getUserCacheFile)
-import System.FilePath (takeDirectory)
+import System.Directory
+  ( XdgDirectory (..),
+    createDirectoryIfMissing,
+    doesFileExist,
+    getModificationTime,
+    getXdgDirectory,
+  )
+import System.FilePath (takeDirectory, (</>))
 
 -- | Manage cache file expiration.
 newtype Age
@@ -39,7 +43,9 @@ ageAsTime (MaxDays days) now =
 
 -- | The file name for catching @TheMovieDB.Configuration@.
 tmdbCacheFile :: IO FilePath
-tmdbCacheFile = getUserCacheFile "vimeta" "tmdb-config.json"
+tmdbCacheFile =
+  getXdgDirectory XdgCache "vimeta"
+    <&> (</> "tmdb-config.json")
 
 -- | Produce a cached version of @TheMovieDB.Configuration@ or use
 -- the given action to create a cache a new value.
@@ -62,7 +68,7 @@ readCache filename age = do
       modtime <- liftIO (getModificationTime filename)
 
       if fresh now modtime
-        then Aeson.decode' <$> liftIO (BL.readFile filename)
+        then Aeson.decode' <$> readFileLBS filename
         else return Nothing
     fresh :: UTCTime -> UTCTime -> Bool
     fresh now modtime = ageAsTime age now <= modtime
@@ -71,7 +77,7 @@ readCache filename age = do
 writeCache :: (MonadIO m, ToJSON a) => FilePath -> a -> m ()
 writeCache filename value = liftIO $ do
   createDirectoryIfMissing True (takeDirectory filename)
-  BL.writeFile filename (Aeson.encode value)
+  writeFileLBS filename (Aeson.encode value)
 
 -- | Generic caching function.
 cache ::

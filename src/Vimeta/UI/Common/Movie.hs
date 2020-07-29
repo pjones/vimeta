@@ -17,7 +17,6 @@ module Vimeta.UI.Common.Movie
   )
 where
 
-import qualified Data.Map as Map
 import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import Vimeta.Core
@@ -37,7 +36,7 @@ tagMovie filename movie = do
   where
     formatMap :: Maybe FilePath -> FormatTable
     formatMap artwork =
-      Map.fromList
+      fromList
         [ ('Y', formatFullDate $ movieReleaseDate movie),
           ('a', toText <$> artwork),
           ('d', Just (Text.take 255 $ movieOverview movie)),

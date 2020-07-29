@@ -19,7 +19,6 @@ module Vimeta.Core.Process
   )
 where
 
-import qualified Data.Text as Text
 import System.Exit (ExitCode (..))
 import System.Process
 import Vimeta.Core.Config
@@ -38,11 +37,10 @@ tagFile cmd = do
     doRealRun :: Vimeta IO ()
     doRealRun = do
       verbose cmd
-      let cmd' = Text.unpack cmd
-      code <- liftIO (spawnCommand cmd' >>= waitForProcess)
+      code <- liftIO (spawnCommand (toString cmd) >>= waitForProcess)
 
       case code of
         ExitSuccess ->
           pass
         ExitFailure n ->
-          throwError ("command failed (" ++ show n ++ "): " ++ cmd')
+          throwError ("command failed (" ++ show n ++ "): " ++ toString cmd)

@@ -19,7 +19,6 @@ module Vimeta.UI.CommandLine.Movie
   )
 where
 
-import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import Options.Applicative
 import System.FilePath
@@ -61,4 +60,4 @@ run opts = execVimeta (updateConfig $ optsCommon opts) $
   where
     -- Calculate an initial search title from the file name.
     initialTitle :: Text
-    initialTitle = Text.pack $ dropExtension (takeFileName $ optsFile opts)
+    initialTitle = toText $ dropExtension (takeFileName $ optsFile opts)
