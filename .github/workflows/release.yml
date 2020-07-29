@@ -1,0 +1,64 @@
+name: Release
+on:
+  push:
+    tags: [ 'v*' ]
+jobs:
+  build:
+    name: Upload Release Asset
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        cabal: ["3.2"]
+        ghc: ["8.6.5"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Record Project Name
+        run: echo "::set-env name=PROJECT::$(echo "$GITHUB_REPOSITORY" | cut -d/ -f2 | sed -e "s/:.*//")
+
+      - name: Setup Haskell
+        id: setup-haskell-cabal
+        uses: actions/setup-haskell@v1.1
+        with:
+          ghc-version: ${{ matrix.ghc }}
+          cabal-version: ${{ matrix.cabal }}
+
+      - name: Configure and Freeze for Cache
+        run: |
+          cabal configure --enable-tests --enable-benchmarks --test-show-details=direct
+          cabal freeze
+
+      - name: Cache ~/.cabal/store
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
+          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
+
+      - name: Install
+        run: |
+          cabal install all --installdir=artifacts --install-method=copy
+          zip --junk-paths $PROJECT-${{ matrix.os }}.zip artifacts/*
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.PROJECT }}-${{ matrix.os }}.zip
+          asset_name: ${{ env.PROJECT }}-${{ matrix.os }}.zip
+          asset_content_type: application/zip
