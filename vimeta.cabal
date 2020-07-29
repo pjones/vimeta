@@ -102,6 +102,7 @@ library
     Vimeta.UI.Term.TV
 
   other-modules:   Paths_vimeta
+  autogen-modules: Paths_vimeta
 
 --------------------------------------------------------------------------------
 executable vimeta
