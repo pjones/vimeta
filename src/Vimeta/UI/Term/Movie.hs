@@ -16,7 +16,6 @@ module Vimeta.UI.Term.Movie
 where
 
 import Byline.Menu
-import qualified Data.Text as Text
 import Network.API.TheMovieDB
 import Vimeta.Core
 import Vimeta.UI.Common.Util
@@ -59,4 +58,4 @@ movieSearch initial = do
     logID movie =
       verbose $
         "using movie ID: "
-          <> Text.pack (show $ movieID movie)
+          <> show (movieID movie)

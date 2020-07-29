@@ -28,9 +28,13 @@ import Data.Aeson hiding (encodeFile)
 import Data.Aeson.Types (typeMismatch)
 import Data.Yaml (decodeFileEither, encodeFile)
 import Network.API.TheMovieDB (Key)
-import System.Directory (createDirectoryIfMissing, doesFileExist)
-import System.Environment.XDG.BaseDir (getUserConfigFile)
-import System.FilePath (takeDirectory)
+import System.Directory
+  ( XdgDirectory (XdgConfig),
+    createDirectoryIfMissing,
+    doesFileExist,
+    getXdgDirectory,
+  )
+import System.FilePath (takeDirectory, (</>))
 import Vimeta.Core.Tagger
 
 -- | Vimeta configuration.
@@ -73,7 +77,9 @@ defaultConfig tagger =
 
 -- | Get the name of the configuration file.
 configFileName :: IO FilePath
-configFileName = getUserConfigFile "vimeta" "config.yml"
+configFileName =
+  getXdgDirectory XdgConfig "vimeta"
+    <&> (</> "config.yml")
 
 -- | Read the configuration file and return a 'Config' value or an error.
 readConfig :: (MonadIO m) => ExceptT String m Config

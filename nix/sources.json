@@ -29,10 +29,10 @@
         "homepage": null,
         "owner": "pjones",
         "repo": "nix-hs",
-        "rev": "9c659114a8e86c32fd44cf3aab739a5707a2fdf6",
-        "sha256": "0gprj1fz1sc5xwmhgjdg0hjra69ck2wbmxdqpb1r4hb01x8sxp1h",
+        "rev": "6d214c90099503ee846374742dc57aa219f2d888",
+        "sha256": "1k8hq1cbmhq0f7s8s1vp6xzn07pp4wad0y13zid1v4qc9nsb5g36",
         "type": "tarball",
-        "url": "https://github.com/pjones/nix-hs/archive/9c659114a8e86c32fd44cf3aab739a5707a2fdf6.tar.gz",
+        "url": "https://github.com/pjones/nix-hs/archive/6d214c90099503ee846374742dc57aa219f2d888.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -47,10 +47,23 @@
         "url": "https://github.com/NixOS/nixpkgs-channels/archive/1ae28ebfdb7e7d48f003881967db67c156724912.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixpkgs-unstable": {
+        "branch": "nixpkgs-unstable",
+        "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
+        "homepage": "https://github.com/NixOS/nixpkgs",
+        "owner": "NixOS",
+        "repo": "nixpkgs-channels",
+        "rev": "970b2b853d41ec80a3c2aba3e585f52818fbbfa3",
+        "sha256": "0cwm2gvnb7dfw9pjrwzlxb2klix58chc36nnymahjqaa1qmnpbpq",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/970b2b853d41ec80a3c2aba3e585f52818fbbfa3.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "themoviedb": {
-        "ref": "next",
+        "branch": "trunk",
+        "ref": "trunk",
         "repo": "https://github.com/pjones/themoviedb.git",
-        "rev": "9588990fcb3cf5185e41b9c6a8f91d44a4046f91",
+        "rev": "d0034a7415df82a791b21d125bd43ad964ce5fd4",
         "type": "git"
     }
 }

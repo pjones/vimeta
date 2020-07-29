@@ -20,10 +20,8 @@ module Vimeta.Core.Format
   )
 where
 
-import qualified Data.Map as Map
-import qualified Data.Text as Text
-import Data.Time (Day (..), formatTime)
-import Data.Time.Locale.Compat (defaultTimeLocale)
+import Data.Time (Day (..), defaultTimeLocale, formatTime)
+import Relude.Extra.Map
 import System.Process.Internals (translate)
 import Text.Parsec hiding ((<|>))
 
@@ -67,7 +65,7 @@ formatYear :: Maybe Day -> Maybe Text
 formatYear = formatDay "%Y"
 
 formatDay :: String -> Maybe Day -> Maybe Text
-formatDay fmt d = Text.pack . formatTime defaultTimeLocale fmt <$> d
+formatDay fmt d = toText . formatTime defaultTimeLocale fmt <$> d
 
 parseFormatString :: Parser Text
 parseFormatString = manyTill go eof >>= renderFormatString
@@ -78,12 +76,12 @@ parseFormatString = manyTill go eof >>= renderFormatString
 renderFormatString :: [(Text, Replacement)] -> Parser Text
 renderFormatString rs = do
   table <- ask
-  return (Text.concat $ map (render table) rs)
+  return (mconcat $ map (render table) rs)
   where
     escape :: Text -> Text
-    escape = Text.pack . translate . Text.unpack
+    escape = toText . translate . toString
     findChar :: FormatTable -> Char -> Text
-    findChar t c = fromMaybe "" $ join (Map.lookup c t)
+    findChar t c = fromMaybe "" $ join (lookup c t)
     render :: FormatTable -> (Text, Replacement) -> Text
     render tbl (txt, Replace c) = txt <> escape (findChar tbl c)
     render tbl (txt, Condition c) = txt <> renderCondition tbl c
@@ -91,10 +89,10 @@ renderFormatString rs = do
     renderCondition :: FormatTable -> [(Text, Replacement)] -> Text
     renderCondition tbl conds =
       if all (checkCondition tbl) conds
-        then Text.concat $ map (render tbl) conds
-        else Text.empty
+        then mconcat $ map (render tbl) conds
+        else mempty
     checkCondition :: FormatTable -> (Text, Replacement) -> Bool
-    checkCondition tbl (_, Replace c) = isJust (join $ Map.lookup c tbl)
+    checkCondition tbl (_, Replace c) = isJust (join $ lookup c tbl)
     checkCondition tbl (_, Condition c) = all (checkCondition tbl) c
     checkCondition _ (_, EndOfInput) = True
 
@@ -103,7 +101,7 @@ renderFormatString rs = do
 -- character itself.
 findFormatCharacter :: Parser (Text, Maybe Char)
 findFormatCharacter = do
-  beforeText <- Text.pack <$> manyTill anyChar (try eofOrFormatChar)
+  beforeText <- toText <$> manyTill anyChar (try eofOrFormatChar)
   formatChar <- try $ (Just <$> anyChar) <|> return Nothing
   return (beforeText, formatChar)
   where

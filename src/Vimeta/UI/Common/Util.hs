@@ -19,8 +19,7 @@ module Vimeta.UI.Common.Util
   )
 where
 
-import Data.Time (Day, formatTime)
-import Data.Time.Locale.Compat (defaultTimeLocale)
+import Data.Time (Day, defaultTimeLocale, formatTime)
 
 -- | Wrap some text with parenthesis.
 parens :: Text -> Text

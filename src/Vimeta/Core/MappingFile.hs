@@ -21,7 +21,6 @@ module Vimeta.Core.MappingFile
 where
 
 import Data.Char (isSpace)
-import qualified Data.Text.IO as Text
 import System.Directory (doesFileExist)
 import System.FilePath (takeExtension)
 import Text.Parsec hiding ((<|>))
@@ -42,7 +41,7 @@ parseMappingFile ::
   Parser a ->
   Vimeta m [(FilePath, a)]
 parseMappingFile filename p = do
-  contents <- runIO $ Text.readFile filename
+  contents <- runIO $ readFileText filename
 
   case runIdentity $ runParserT (mapping p) () filename contents of
     Left e -> throwError (show e)

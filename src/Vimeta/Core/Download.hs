@@ -20,7 +20,7 @@ module Vimeta.Core.Download
   )
 where
 
-import qualified Data.ByteString.Lazy as BS
+import qualified Data.ByteString.Lazy as LByteString
 import qualified Data.Text as Text
 import qualified Network.HTTP.Client as HC
 import System.FilePath
@@ -43,7 +43,7 @@ withArtwork urls = withDownload (listToMaybe $ candidates urls)
     candidates :: [Text] -> [Text]
     candidates = filter checkExtension . reverse
     checkExtension :: Text -> Bool
-    checkExtension = goodExtension . takeExtension . Text.unpack . Text.toLower
+    checkExtension = goodExtension . takeExtension . toString . Text.toLower
     goodExtension :: String -> Bool
     goodExtension ext = ext == ".jpg" || ext == ".png"
 
@@ -95,9 +95,10 @@ runWithTempFile ::
 runWithTempFile url manager vio = do
   context <- ask
 
-  runIOE $ withSystemTempFile "vimeta" $ \name h -> do
-    downloadToHandle manager (Text.unpack url) h
-    execVimetaWithContext context $ vio (Just name)
+  runIOE $
+    withSystemTempFile "vimeta" $ \name h -> do
+      downloadToHandle manager (toString url) h
+      execVimetaWithContext context $ vio (Just name)
 
 -- | Helper function to run an action without needing a temporary file.
 runWithoutTempFile ::
@@ -113,5 +114,5 @@ downloadToHandle :: HC.Manager -> String -> Handle -> IO ()
 downloadToHandle manager url handle = do
   request <- HC.parseRequest url
   response <- HC.httpLbs request manager
-  BS.hPut handle (HC.responseBody response)
+  LByteString.hPut handle (HC.responseBody response)
   hFlush handle
