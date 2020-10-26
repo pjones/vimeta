@@ -52,7 +52,7 @@ common dependencies
   build-depends:
     , aeson                 >=0.8    && <1.6
     , base                  >=4.6    && <5.0
-    , byline                ^>=1.0
+    , byline                >=1.0 && < 1.2
     , bytestring            ^>=0.10
     , directory             >=1.2.3  && <1.4
     , exceptions            ^>=0.10
