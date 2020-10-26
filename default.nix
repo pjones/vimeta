@@ -13,7 +13,7 @@ nix-hs {
     byline = (import sources.byline {
       inherit (lib) pkgs;
       inherit ghc;
-    }).byline;
+    });
 
     themoviedb =
       (import sources.themoviedb {
@@ -27,8 +27,8 @@ nix-hs {
       else super.aeson;
 
     http-client =
-      if super ? http-client_0_7_1
-      then super.http-client_0_7_1
+      if super ? http-client_0_7_2_1
+      then super.http-client_0_7_2_1
       else super.http-client;
 
     # ERROR: infinite recursion encountered, at undefined position
