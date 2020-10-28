@@ -5,10 +5,10 @@
         "homepage": "",
         "owner": "pjones",
         "repo": "byline",
-        "rev": "67b636c2e1fd6c016cd2e65876c185e03c98656b",
-        "sha256": "0ikz08yi3csdxnd8r144y5ls4a5dnyrgsbr9sp94ylf3dy8ryfbd",
+        "rev": "a5e3001333b0ca4e5ddad522d67fd6d372a5bcd7",
+        "sha256": "1hbi9vwmcxnfqj65a9ghav1vqx892wzqc5zclkkzb4nqx3rbi119",
         "type": "tarball",
-        "url": "https://github.com/pjones/byline/archive/67b636c2e1fd6c016cd2e65876c185e03c98656b.tar.gz",
+        "url": "https://github.com/pjones/byline/archive/a5e3001333b0ca4e5ddad522d67fd6d372a5bcd7.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
@@ -47,11 +47,23 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/95d26c9a9f2a102e25cf318a648de44537f42e09.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixpkgs-unstable": {
+        "branch": "nixpkgs-unstable",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "7ad5e816faba3f808e2a8815b14d0f023a4e2160",
+        "sha256": "1vqqpcnybwl10h5br5nm8n0l33qfzj3rxhahf3pfjfvrc8iyk762",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/7ad5e816faba3f808e2a8815b14d0f023a4e2160.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "themoviedb": {
         "branch": "trunk",
         "ref": "trunk",
         "repo": "https://github.com/pjones/themoviedb.git",
-        "rev": "d0034a7415df82a791b21d125bd43ad964ce5fd4",
+        "rev": "1b3f34cafda360cd26f44808cd4d311b691afa8e",
         "type": "git"
     }
 }
