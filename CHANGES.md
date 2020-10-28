@@ -1,10 +1,14 @@
 # Version History
 
-## 0.3.0.0 (July 29, 2020)
+## 0.3 (July 29, 2020)
 
   - Restore the ability to use `--help` with subcommands
 
   - Update dependencies (minor changes for Byline and themoviedb)
+
+  - Minor updates:
+
+    - 0.3.0.1 (October 28, 2020): Update dependencies
 
 ## 0.2.5.1 (April 16, 2019)
 
