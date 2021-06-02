@@ -1,6 +1,6 @@
 # Vimeta: frontend for video metadata tagging tools
 
-[![CI](https://github.com/pjones/vimeta/workflows/CI/badge.svg)](https://github.com/pjones/vimeta/actions)
+[![tests](https://github.com/pjones/vimeta/workflows/tests/badge.svg)](https://github.com/pjones/vimeta/actions)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/pjones/vimeta?label=release)](https://github.com/pjones/vimeta/releases)
 [![Hackage](https://img.shields.io/hackage/v/vimeta)](https://hackage.haskell.org/package/vimeta)
 

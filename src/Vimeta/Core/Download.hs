@@ -24,7 +24,6 @@ import qualified Data.ByteString.Lazy as LByteString
 import qualified Data.Text as Text
 import qualified Network.HTTP.Client as HC
 import System.FilePath
-import System.IO (hFlush)
 import System.IO.Temp (withSystemTempFile)
 import Vimeta.Core.Config
 import Vimeta.Core.Vimeta

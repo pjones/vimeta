@@ -9,6 +9,7 @@
   - Minor updates:
 
     - 0.3.0.1 (October 28, 2020): Update dependencies
+    - 0.3.1 (June 2, 2021): Update dependencies
 
 ## 0.2.5.1 (April 16, 2019)
 

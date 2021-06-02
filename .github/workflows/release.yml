@@ -1,4 +1,4 @@
-name: Release
+name: release
 on:
   push:
     tags: [ 'v*' ]
@@ -25,8 +25,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        cabal: ["3.2"]
-        ghc: ["8.6.5"]
+        cabal: ["3.4"]
+        ghc: ["8.10"]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
 
       - name: Setup Haskell
         id: setup-haskell-cabal
-        uses: actions/setup-haskell@v1.1
+        uses: haskell/actions/setup@v1
         with:
           ghc-version: ${{ matrix.ghc }}
           cabal-version: ${{ matrix.cabal }}
@@ -54,7 +54,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
 
       - name: Cabal Install
-        run: cabal install all --installdir=artifacts --install-method=copy
+        run: cabal install --installdir=artifacts --install-method=copy
 
       - name: Create Archive
         run: zip -j ${{ matrix.os }}.zip artifacts/*
