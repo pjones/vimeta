@@ -5,10 +5,10 @@
         "homepage": "",
         "owner": "pjones",
         "repo": "byline",
-        "rev": "a5e3001333b0ca4e5ddad522d67fd6d372a5bcd7",
-        "sha256": "1hbi9vwmcxnfqj65a9ghav1vqx892wzqc5zclkkzb4nqx3rbi119",
+        "rev": "2f1b84ea64d87656f372350e4c183d33afcd6a92",
+        "sha256": "16disli93hazh2ay8ll1gqi0b294ci9rjgwq0zagz5z2cn9pick3",
         "type": "tarball",
-        "url": "https://github.com/pjones/byline/archive/a5e3001333b0ca4e5ddad522d67fd6d372a5bcd7.tar.gz",
+        "url": "https://github.com/pjones/byline/archive/2f1b84ea64d87656f372350e4c183d33afcd6a92.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
@@ -24,46 +24,39 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nix-hs": {
-        "branch": "release-20.09",
+        "branch": "release-21.05",
         "description": "Haskell + nixpkgs = nix-hs",
         "homepage": null,
         "owner": "pjones",
         "repo": "nix-hs",
-        "rev": "67163bb02a8791d79136ba6914b6d6dad594533b",
-        "sha256": "0f7sjh45wxbf2m76l37f4l4v4dkq32dm599p85acx53324nr9y8z",
+        "rev": "11e961e744b212b4e6d69406c003e43a58c487fc",
+        "sha256": "0xnxwsyxq8v5wgp8w65cr3lncv5s12mj5siybn7rffslkfraqw3i",
         "type": "tarball",
-        "url": "https://github.com/pjones/nix-hs/archive/67163bb02a8791d79136ba6914b6d6dad594533b.tar.gz",
+        "url": "https://github.com/pjones/nix-hs/archive/11e961e744b212b4e6d69406c003e43a58c487fc.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "nixos-20.09",
+        "branch": "nixos-21.05",
         "description": "Nix Packages collection",
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "95d26c9a9f2a102e25cf318a648de44537f42e09",
-        "sha256": "0ymhj252dq7z2ajdjsdz99h106ylm4vsmz5v3xiwsylcs4bz2nl8",
+        "rev": "5237039cc1e7633a7697ed7999afd1f80d91ff14",
+        "sha256": "1i1rgqcjxbl968b0m3fi4w0c0vnq9qiivagnpsz3y9sp2mws0d9q",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/95d26c9a9f2a102e25cf318a648de44537f42e09.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
-    "nixpkgs-unstable": {
-        "branch": "nixpkgs-unstable",
-        "description": "Nix Packages collection",
-        "homepage": "",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "7ad5e816faba3f808e2a8815b14d0f023a4e2160",
-        "sha256": "1vqqpcnybwl10h5br5nm8n0l33qfzj3rxhahf3pfjfvrc8iyk762",
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/7ad5e816faba3f808e2a8815b14d0f023a4e2160.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/5237039cc1e7633a7697ed7999afd1f80d91ff14.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "themoviedb": {
         "branch": "trunk",
-        "ref": "trunk",
-        "repo": "https://github.com/pjones/themoviedb.git",
-        "rev": "1b3f34cafda360cd26f44808cd4d311b691afa8e",
-        "type": "git"
+        "description": "Simple Haskell library that provides functions for retrieving movie metadata from TheMovieDB",
+        "homepage": "",
+        "owner": "pjones",
+        "repo": "themoviedb",
+        "rev": "bf6bc0e0fdd8c4825340197c07a5f80a8a193526",
+        "sha256": "00zfspfw9177lwgl7n4wq934zra7dis6zibz1iqsqcs1s1hvw3sn",
+        "type": "tarball",
+        "url": "https://github.com/pjones/themoviedb/archive/bf6bc0e0fdd8c4825340197c07a5f80a8a193526.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

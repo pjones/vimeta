@@ -1,6 +1,6 @@
 cabal-version:      2.2
 name:               vimeta
-version:            0.3.0.1
+version:            0.3.1
 synopsis:           Frontend for video metadata tagging tools
 homepage:           https://github.com/pjones/vimeta
 bug-reports:        https://github.com/pjones/vimeta/issues
@@ -8,11 +8,11 @@ license:            BSD-2-Clause
 license-file:       LICENSE
 author:             Peter Jones <pjones@devalot.com>
 maintainer:         Peter Jones <pjones@devalot.com>
-copyright:          Copyright (c) 2013-2020 Peter Jones
+copyright:          Copyright (c) 2013-2021 Peter Jones
 category:           Video
 stability:          experimental
 build-type:         Simple
-tested-with:        GHC ==8.6.5 || ==8.8.4 || ==8.10.2
+tested-with:        GHC ==8.8.4 || ==8.10.4 || ==9.0.1
 description:
   Vimeta is a tool to fetch video metadata from the interwebs and
   update video files using a tagging tool.
@@ -64,7 +64,7 @@ common dependencies
     , optparse-applicative  >=0.11   && <0.17
     , parsec                ^>=3.1
     , process               >=1.1    && <1.7
-    , relude                >=0.6    && <0.8
+    , relude                ^>=1.0
     , temporary             >=1.1    && <1.4
     , text                  >=0.11   && <1.3
     , themoviedb            ^>=1.2
